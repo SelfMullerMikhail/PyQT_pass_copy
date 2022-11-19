@@ -1,0 +1,8 @@
+-- SQLite
+CREATE TABLE drinksMenu(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name VARCHAR(50),
+price BEGIN(50)
+);
+
+-- DROP TABLE drinksMenu;
