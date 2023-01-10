@@ -1,11 +1,15 @@
+import os, sys
+
 from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import QSize
 
-from widgets.func_get_path_icon import get_path_icon
+sys.path.append( os.path.dirname( __file__ ).replace("main_window", ""))
+
+from func_get_path_icon import get_path_icon
 
 
 class PayButton(QPushButton):
-    def __init__(self):
+    def __init__(self, *args):
         super().__init__()
         self.setText("Payment")
         self.setFixedHeight(40)
