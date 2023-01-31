@@ -15,27 +15,32 @@ class ActiveTable():
     def get_active(self):
         return self.activeTab
 
-    def __init__(self, *args):
-        self.helper = args[0]
+    def __init__(self, helper):
+        self.helper = helper
         self.activeTab = self.helper.get_list("SELECT MIN(id) FROM Tables")[0][0]
 
 class Window(QMainWindow):
-
     def __init__(self):
+
         super().__init__()
         self.setGeometry(50, 50, 1200, 800)
         self.helper = Db_helper("Alpha.db")
-        self.activeTab = ActiveTable(self.helper)
+        self.activeTab = ActiveTable(helper = self.helper)
         self.upMenu = UpMenu_comboBox()
-        self.upMenu.create_tab("Main", "home.svg", Main_widget(self.helper, self.activeTab))
-        self.upMenu.create_tab("Managment", "user.svg", Managment_widget(self.helper))
-        self.upMenu.create_tab("Settings", "settings.svg", Archive_widget())
-        self.upMenu.create_tab("Arhcive", "archive.svg", Setting_widget())
-        self.setCentralWidget(self.upMenu.activate("Managment"))
-    
-    def test(self):
-        ...
-        
+
+        self.Main_widget = Main_widget(activeTab = self.activeTab, centralWidget = self)
+        self.managment_window = Managment_widget(active_window = self.activeTab, central_window = self)
+
+        self.upMenu.create_tab("Main", "home.svg", self.Main_widget)
+        self.upMenu.create_tab("Managment", "user.svg", self.managment_window)
+        self.upMenu.create_tab("Arhcive", "archive.svg", Archive_widget())
+        self.upMenu.create_tab("Settings", "settings.svg", Setting_widget())
+        self.inf = self.upMenu.activate("Arhcive")
+        self.setCentralWindow()
+
+    def setCentralWindow(self):
+        self.setCentralWidget(self.inf)
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Window()
