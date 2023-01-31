@@ -35,7 +35,7 @@ class Window(QMainWindow):
         self.upMenu.create_tab("Managment", "user.svg", self.managment_window)
         self.upMenu.create_tab("Arhcive", "archive.svg", Archive_widget())
         self.upMenu.create_tab("Settings", "settings.svg", Setting_widget())
-        self.inf = self.upMenu.activate("Arhcive")
+        self.inf = self.upMenu.activate("Main")
         self.setCentralWindow()
 
     def setCentralWindow(self):
