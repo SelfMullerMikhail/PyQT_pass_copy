@@ -100,8 +100,6 @@ class Stock_window(QGridLayout):
             if diller == "":
                 id_diller = 0
             else:
-                print(f"--{diller}--")
-                print(f"--{id_diller}--")
                 id_diller = self.helper.get_tuple(f"""SELECT id FROM Suppliers WHERE name = '{diller}' """)[0]
             self.helper.insert(f"""INSERT INTO Stock(name, count, price, id_Suppiler) 
                                     VALUES ('{name}', 0, {price}, {id_diller}) """)
