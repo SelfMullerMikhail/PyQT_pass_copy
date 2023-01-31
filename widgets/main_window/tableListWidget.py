@@ -2,11 +2,21 @@ import os
 
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 from PyQt6.QtCore import QSize, Qt
-from widgets.func_get_path_icon import get_path_icon
+from func_get_path_icon import get_path_icon
 
 from functions.db_Helper import Db_helper
 
 class TablesListWidget(QListWidget):
+    def __init__(self, *args, activeTab):
+        super().__init__() 
+        self.helper = Db_helper("Alpha.db")
+        self.activeTab = activeTab
+        self.ordersListWidget = args[0]
+        self.getTabs()
+        self.setFixedWidth(130)
+        self.setIconSize(QSize(30, 30))
+        self.itemClicked.connect(self.one_click)
+        self.itemChanged.connect(self.change_name)
 
     def getTablesCount(self):
         return self.helper.get_list("SELECT COUNT(id) FROM Tables")[0][0]
@@ -22,11 +32,10 @@ class TablesListWidget(QListWidget):
         return helper.get_list("SELECT MAX(id) FROM Tables")[0][0]
 
     def create_table(self, tab_name = "tab", id_tab = getMaxTabId()):
-        if self.getTablesCount() <= 10:
-            self.customItem = QListWidgetItem(self.customListWidgetItem(tab_name, id_tab))
-            self.customItem.indx = id_tab
-            self.customItem.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable)
-            self.addItem(self.customItem)
+        self.customItem = QListWidgetItem(self.customListWidgetItem(tab_name, id_tab))
+        self.customItem.indx = id_tab
+        self.customItem.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable)
+        self.addItem(self.customItem)
 
     def customListWidgetItem(self, tab_name, id_tab):
         if(tab_name == "tab"):
@@ -35,11 +44,13 @@ class TablesListWidget(QListWidget):
             self.activeTabName = tab_name
         return QListWidgetItem(get_path_icon("tablet.svg"),  f"{self.activeTabName}")
         
-    def del_table(self):
+    def del_table(self, pay = False):
+        if ((pay == True) and (self.getTablesCount() == 1)):
+                self.add_table()
         if 1 < self.getTablesCount():
             self.helper.insert(f"DELETE FROM Tables WHERE id = {self.activeTab.activeTab}")
             self.helper.insert(f"DELETE FROM OpenOrder WHERE id_table = {self.activeTab.activeTab}")
-            self.ordersListWidget.clearContents()
+            self.ordersListWidget.drow_orders()
             self.clear()
             self.getTabs()
             self.activeTab.activeTab = self.helper.get_list("SELECT MIN(id) FROM Tables")[0][0]
@@ -52,19 +63,8 @@ class TablesListWidget(QListWidget):
 
     def one_click(self, e):
         self.activeTab.activeTab = e.indx
-        self.ordersListWidget.clearContents()
         self.ordersListWidget.drow_orders()
 
     def change_name(self, e):
         self.helper.insert(f"UPDATE Tables SET tables_name = '{e.text()}' WHERE id = {e.indx}")
 
-    def __init__(self, *args):
-        super().__init__() 
-        self.helper = args[0]
-        self.ordersListWidget = args[1]
-        self.activeTab = args[2]
-        self.getTabs()
-        self.setFixedWidth(100)
-        self.setIconSize(QSize(30, 30))
-        self.itemClicked.connect(self.one_click)
-        self.itemChanged.connect(self.change_name)

@@ -1,14 +1,8 @@
-import os, sys
-
 from PyQt6.QtWidgets import QComboBox, QVBoxLayout
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QWidget, QGridLayout
 
-
-
-sys.path.append( os.path.dirname( __file__ ).replace("widgets\main_window", ""))
-
-from widgets.func_get_path_icon import get_path_icon
+from func_get_path_icon import get_path_icon
 
 class UpMenu_comboBox(QComboBox):
 
@@ -46,7 +40,7 @@ class UpMenu_comboBox(QComboBox):
         self.active_window.show()
         return self.main_widget
 
-    def __init__(self, *args):
+    def __init__(self):
         super().__init__()
         self.setFixedHeight(40)
         self.setIconSize(QSize(30,30))
