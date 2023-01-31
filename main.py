@@ -32,6 +32,9 @@ class Window(QMainWindow):
         self.upMenu.create_tab("Settings", "settings.svg", Archive_widget())
         self.upMenu.create_tab("Arhcive", "archive.svg", Setting_widget())
         self.setCentralWidget(self.upMenu.activate("Managment"))
+    
+    def test(self):
+        ...
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
