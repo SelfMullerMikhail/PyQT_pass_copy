@@ -34,7 +34,7 @@ class Main_widget(QGridLayout):
         self.payButton = PayButton(text="Payment", centralWidget = self.centralWidget, activeTab = activeTab, tablesListWidget = self.tablesListWidget)
         self.clearButton = ClearButton(activeTab = activeTab, ordersListWidget = self.ordersListWidget) 
         self.delTableButton = DelTableButton(self.tablesListWidget)
-        self.addTableButton = AddTableButton(self.tablesListWidget) 
+        self.addTableButton = AddTableButton(self.tablesListWidget)
 
         self.clearButton.setStyleSheet(clearButtonStyle)
         self.payButton.setStyleSheet(payButtonStyle)

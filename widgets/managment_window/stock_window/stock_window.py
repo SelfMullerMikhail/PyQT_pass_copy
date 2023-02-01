@@ -3,10 +3,10 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression
 
 from widgets.ordersListWidget import OrdersListWidget
-from widgets.managment_window.sorting_QComboBox import Sorting_QComboBox
 from widgets.managment_window.products_window.dell_product_button import Dell_product_button
 from widgets.managment_window.stock_window.add_stock_button import Add_stock_button
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
+from widgets.sorting_widgets import QComboBoxSorting, QLineEditSorting
 
 from functions.db_Helper import Db_helper
 
@@ -23,33 +23,21 @@ class Stock_window(QGridLayout):
         self.products_list.settingSizeColumn((70, 70, 70, 70, 40, 40))
         self.products_list.settingSizeRow(50)
         self.products_list.setLineCount("Stock")
-        self.drow_stock()
-
-        self.quick_search = QLineEdit()
-        self.quick_search.setPlaceholderText("Quick search")
-        self.quick_search.textChanged.connect(self.printer)
+        self.quick_search = QLineEditSorting(selfWidget=self)
         self.quick_search.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9]{1,10}")))
-
-        self.sorting = Sorting_QComboBox() #Кастомить
-        self.sorting.addItemCycle(("Name", "Count", "Price", "'Total money'"))
-        self.sorting.textActivated.connect(self.sort)
-
-        self.append_button = QPushButton(text="Append") # Кастомить
+        sort_list = ["Name", "Count", "Price", "'Total money'"]
+        self.sorting = QComboBoxSorting(sort_list=sort_list, selfWidget=self, quick_search=self.quick_search)
+        self.append_button = QPushButton(text="Append") 
         self.append_button.clicked.connect(self.add_product_window)
-
-
         self.addWidget(self.products_list, 1, 0, 19, 20)
         self.addWidget(self.quick_search, 0, 0, 1, 3)
         self.addWidget(self.sorting, 0, 3, 1, 3)
         self.addWidget(self.append_button, 0, 18, 1, 2)
+        self.drow_stock()
 
-    def printer(self, e):
-        self.products_list.drow_stock(inf = e)
+    def drow_func(self):
+        self.drow_stock()
 
-    def sort(self, e):
-        self.products_list.drow_stock(category=e)
-
-#####################################################################################
     def add_product_window(self):
         self.form = QWidget()
         self.form.setGeometry(200, 200, 800, 500)
@@ -107,12 +95,12 @@ class Stock_window(QGridLayout):
             self.drow_stock()
             self.form.close()
 
-    def drow_stock(self, inf="", category = "Name"):
+    def drow_stock(self):
         self.products_list.clearContents()
         info = self.helper.get_list((f"""SELECT Name, Count, Price, (Count/1000*Price) as 'Total money', id_Suppiler, id 
                                                     FROM Stock
-                                                    WHERE Name LIKE '%{inf}%'
-                                                    ORDER BY {category};"""))
+                                                    WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%'
+                                                    ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
             for i in range(4):
                 self.products_list.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))

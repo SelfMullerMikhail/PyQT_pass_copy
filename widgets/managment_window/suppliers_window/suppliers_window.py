@@ -4,8 +4,8 @@ from PyQt6.QtCore import QRegularExpression
 
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.ordersListWidget import OrdersListWidget
-from widgets.managment_window.sorting_QComboBox import Sorting_QComboBox
 from widgets.managment_window.suppliers_window.customWidgets import Dell_Button_Suppliers
+from widgets.sorting_widgets import QLineEditSorting, QComboBoxSorting
 from functions.db_Helper import Db_helper
 
 
@@ -21,33 +21,21 @@ class Suppliers_window(QGridLayout):
         self.suppliers_list.settingSizeColumn((70, 70, 70, 70, 150, 30, 30))
         self.suppliers_list.settingSizeRow(35)
         self.suppliers_list.setLineCount("Suppliers")
-        self.get_suppliers()
-
-        self.quick_search = QLineEdit()
-        self.quick_search.setPlaceholderText("Quick search")
-        self.quick_search.textChanged.connect(self.printer)
-
-        self.sorting = Sorting_QComboBox() #Кастомить
-        self.sorting.addItemCycle(("name", "number", "mail", "iban", "info"))
-        self.sorting.textActivated.connect(self.sort)
-
+        self.quick_search = QLineEditSorting(selfWidget=self)
+        sort_list = ["name", "number", "mail", "iban", "info"]
+        self.sorting = QComboBoxSorting(sort_list=sort_list, selfWidget=self, quick_search = self.quick_search)
         self.append_button = QPushButton(text="Append") # Кастомить
         self.append_button.clicked.connect(self.add_supplier_window)
-
-
         self.addWidget(self.suppliers_list, 1, 0, 19, 20)
         self.addWidget(self.quick_search, 0, 0, 1, 3)
         self.addWidget(self.sorting, 0, 3, 1, 3)
         self.addWidget(self.append_button, 0, 18, 1, 2)
-
-    def printer(self, e):
-        self.get_suppliers(inf = e)
-
-    def sort(self, e):
-        self.get_suppliers(category=e)
+        self.get_suppliers()
 
 
-########################################################################33
+    def drow_func(self):
+        self.get_suppliers()
+
     def add_supplier_window(self):
         self.form = QWidget()
         self.form.setGeometry(200, 200, 800, 500)
@@ -107,9 +95,9 @@ class Suppliers_window(QGridLayout):
             self.get_suppliers()
             self.form.close()
 
-    def get_suppliers(self, inf = "", category = "name"):
+    def get_suppliers(self):
         self.suppliers_list.clearContents()
-        info = self.helper.get_list(f"""SELECT * FROM Suppliers WHERE name LIKE'%{inf}%' GROUP BY {category}""")
+        info = self.helper.get_list(f"""SELECT * FROM Suppliers WHERE {self.sorting.category_search} LIKE'%{self.quick_search.quick_search_line}%' GROUP BY {self.sorting.category_search}""")
         self.draw_suppliers(info)
 
     def draw_suppliers(self, info):
