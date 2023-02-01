@@ -87,10 +87,6 @@ class Pay_widget(QWidget):
 
         self.drow_pay_orders()
 
-    def testing(self, e):
-        print(e)
-
-
     def drow_pay_orders(self):
         info = self.helper.get_list(f"""SELECT Menu.name, Menu.price, count(count), (Menu.price * count(count)), Menu.id 
                                             FROM  OpenOrder, Menu
@@ -126,8 +122,8 @@ class Pay_widget(QWidget):
 
         if ((self.cash_insert + self.card_insert) >= self.summ_order) and (self.card_insert <= self.summ_order):
 
-            self.helper.insert(f"""INSERT INTO ClosedOrder (id_table, name_table, client_name, menu_name, count, cash, card, time_open)
-                                SELECT OpenOrder.id_table, Tables.tables_name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open
+            self.helper.insert(f"""INSERT INTO ClosedOrder (id_table, name_table, client_name, menu_name, count, cash, card, time_open, menu_price)
+                                SELECT OpenOrder.id_table, Tables.tables_name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open, Menu.price
                                 FROM OpenOrder, Menu, Client, Tables
                                 WHERE OpenOrder.id_menu = Menu.id AND OpenOrder.id_client = Client.id
                                 AND OpenOrder.id_table = Tables.id AND Tables.id_client = Client.id
@@ -141,4 +137,5 @@ class Pay_widget(QWidget):
 
             self.tablesListWidget.del_table(pay = True)
             self.centralWidget.managment_window.stock_window.drow_stock()
+            self.centralWidget.archive_widget.drow_archive_all()
             self.setCentralWidget()

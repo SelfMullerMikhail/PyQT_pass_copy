@@ -4,7 +4,7 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression, QSize
 
 from widgets.ordersListWidget import OrdersListWidget
-from widgets.managment_window.sorting_QComboBox import Sorting_QComboBox
+from widgets.sorting_widgets import QComboBoxSorting, QLineEditSorting
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from functions.db_Helper import Db_helper
 from widgets.managment_window.category_window.dell_category_button import Dell_category_button
@@ -23,30 +23,24 @@ class Category_widget(QGridLayout):
         self.products_list.add_columns(((0, ""), (1, "Name"), (2, ""), (3, "")))
         self.products_list.settingSizeColumn((40, 100, 40, 40))
         self.products_list.settingSizeRow(50)
-        self.get_category()
-        self.quick_search = QLineEdit()
-        self.quick_search.setPlaceholderText("Quick search")
-        self.quick_search.textChanged.connect(self.printer)
+        self.quick_search = QLineEditSorting(selfWidget=self)
         self.quick_search.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9]{0,20}")))
-        self.sorting = Sorting_QComboBox() #Кастомить
-        self.sorting.addItemCycle(("name", "image"))
-        self.sorting.textActivated.connect(self.sort)
+        sort_list = ["name", "image"]
+        self.sorting = QComboBoxSorting(selfWidget=self, sort_list=sort_list, quick_search = self.quick_search) #Кастомить
         self.append_button = QPushButton(text="Append") # Кастомить
         self.append_button.clicked.connect(self.add_product_window)
         self.addWidget(self.products_list, 1, 0, 19, 20)
         self.addWidget(self.quick_search, 0, 0, 1, 3)
         self.addWidget(self.sorting, 0, 3, 1, 3)
         self.addWidget(self.append_button, 0, 18, 1, 2)
+        self.get_category()
 
-    def printer(self, e):
-        self.get_category(inf = e)
+    def drow_func(self):
+        self.get_category()
 
-    def sort(self, e):
-        self.get_category(category=e)
-
-    def get_category(self, inf ="", category = "Name"):
+    def get_category(self):
         self.products_list.clearContents()
-        info = self.helper.get_list(f"""SELECT * FROM Category WHERE name LIKE '%{inf}%' ORDER BY {category}""")
+        info = self.helper.get_list(f"""SELECT * FROM Category WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%' ORDER BY {self.sorting.category_search}""")
         for row in range(len(info)):
             icon = CustomQTableWidgetItem()
             icon.setIcon(get_path_icon(info[row][2]))
