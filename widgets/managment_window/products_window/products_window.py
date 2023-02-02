@@ -8,8 +8,7 @@ from widgets.managment_window.products_window.append_product_button import Appen
 from widgets.managment_window.products_window.customs_widgets import *
 from widgets.managment_window.products_window.product_edit import Product_edit
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
-from func_get_path_icon import get_path_icon
-
+from widgets.managment_window.products_window.info_products_menu import InfoProductsMenu
 
 
 class Products_window(QGridLayout):
@@ -51,17 +50,11 @@ class Products_window(QGridLayout):
                                                     WHERE {self.sorting.category_search} LIKE'%{self.quick_search.quick_search_line}%'
                                                     ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
-            icon = CustomQTableWidgetItem()
-            icon.setIcon(get_path_icon(info[row][0]))
-            self.products_list.setItem(row, 0, icon)
+            self.products_list.setCellWidget(row, 0, InfoProductsMenu(icon=info[row][0], id_menu=info[row][6]))
             for i in range(1, 6):
-                print(info[row][i])
                 self.products_list.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))
-            info_button = QPushButton("info")
-            info_button.clicked.connect(self.info_drow(info[row][1]))
             edit_button = Product_edit(text="edit", id_menu=info[row][6], listWidget = OrdersListWidget, window=self, central_window = self.central_window )
             del_button = CustomButtonDellProduct(text="del", name=info[row][1], window=self, central_window = self.central_window)
-            self.products_list.setCellWidget(row, 6, info_button)
             self.products_list.setCellWidget(row, 7, edit_button)
             self.products_list.setCellWidget(row, 8, del_button)
 
