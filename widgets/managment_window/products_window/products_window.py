@@ -49,10 +49,10 @@ class Products_window(QGridLayout):
                                         WHERE {self.sorting.category_search} LIKE'%{self.quick_search.quick_search_line}%'
                                         ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
-            self.products_list.setCellWidget(row, 0, InfoProductsMenu(icon=info[row][0], id_menu=info[row][0])) # image
+            self.products_list.setCellWidget(row, 0, InfoProductsMenu(icon=info[row][0], id_menu=info[row][2])) # image
             self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1]))) # name
             self.products_list.setItem(row, 2, CustomQTableWidgetItem(str(info[row][4]))) # category
-            self.products_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) # cost
+            self.products_list.setItem(row, 3, CustomQTableWidgetItem(str(round(info[row][6], 2)))) # cost
             self.products_list.setItem(row, 4, CustomQTableWidgetItem(str(info[row][3]))) # price
             self.products_list.setItem(row, 5, CustomQTableWidgetItem(f"{round(int(info[row][8]), 3)} %")) # procent cost
             self.products_list.setCellWidget(row, 7, Product_edit(text="edit", menu_id=info[row][2], listWidget = OrdersListWidget, window=self, central_window = self.central_window ))

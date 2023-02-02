@@ -72,7 +72,6 @@ class Product_edit(QPushButton):
         self.form.show()
     
     def change_category(self, e):
-        print(e)
         self.category_id = e + 1
         
 
@@ -83,6 +82,8 @@ class Product_edit(QPushButton):
             if self.file_put == "":
                 self.file_put = self.file_put_b
             self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\products_window" ,f"feather\{self.file_put}")
+            if self.feather!=None:
+                shutil.copyfile(self.file, self.feather)
             self.butt.setIcon(get_path_icon(self.file_put))
 
     def append_func(self):
@@ -93,7 +94,6 @@ class Product_edit(QPushButton):
         if text != "":
             if price == "":
                 price = 0
-            print(self.category_id)
             self.helper.insert(f"""UPDATE Menu SET name = '{text}' WHERE Menu.id = {self.id_menu} ;""")
             self.helper.insert(f"""UPDATE Menu SET category = {self.category_id} WHERE Menu.id = {self.id_menu} ;""")
             self.helper.insert(f"""UPDATE Menu SET price = {price} WHERE Menu.id = {self.id_menu} ;""")

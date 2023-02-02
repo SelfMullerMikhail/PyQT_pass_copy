@@ -1,11 +1,11 @@
-from PyQt6.QtWidgets import QGridLayout, QLineEdit, QTextEdit, QPushButton, QWidget
-from PyQt6.QtGui import QRegularExpressionValidator
-from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtWidgets import QGridLayout, QPushButton
 
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.ordersListWidget import OrdersListWidget
 from widgets.managment_window.suppliers_window.customWidgets import Dell_Button_Suppliers
 from widgets.sorting_widgets import QLineEditSorting, QComboBoxSorting
+from widgets.managment_window.suppliers_window.append_edit_widget import Append_Edit_widget
+from widgets.managment_window.suppliers_window.suppiler_edit_button import SuppilerEditButton
 from functions.db_Helper import Db_helper
 
 
@@ -32,68 +32,8 @@ class Suppliers_window(QGridLayout):
         self.addWidget(self.append_button, 0, 18, 1, 2)
         self.get_suppliers()
 
-
     def drow_func(self):
         self.get_suppliers()
-
-    def add_supplier_window(self):
-        self.form = QWidget()
-        self.form.setGeometry(200, 200, 800, 500)
-        self.form_Layout = QGridLayout()
-
-        self.enter_name = QLineEdit()
-        self.enter_name.setPlaceholderText('Name')
-        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w]{30}")))
-        self.enter_number = QLineEdit()
-        self.enter_number.setPlaceholderText("Phone Number (90XXXXXXXXXX)")
-        self.enter_number.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{11}")))
-        self.enter_mail = QLineEdit()
-        self.enter_mail.setPlaceholderText("Mail (XXXXX@XXXX.XXX)")
-        self.enter_mail.setValidator(QRegularExpressionValidator(QRegularExpression("[\w]{3,20}@[a-zA-Z0-9]{2,10}[\.][a-z]{2,10}")))
-        self.enter_IBAN = QLineEdit()
-        self.enter_IBAN.setPlaceholderText("IBAN")
-        self.enter_IBAN.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z]{2}[0-9]{27}")))
-        self.enter_info = QTextEdit()
-        self.enter_info.setPlaceholderText("Some info")
-
-        self.append_button = QPushButton("Append")
-        self.append_button.clicked.connect(self.append_func)
-        self.cancel_button = QPushButton("Cancel")
-        self.cancel_button.clicked.connect(self.form.close)
-
-        self.form.setLayout(self.form_Layout)
-
-        self.form_Layout.addWidget(self.enter_name, 0, 0, 1, 2)
-        self.form_Layout.addWidget(self.enter_number, 1, 0, 1, 2)
-        self.form_Layout.addWidget(self.enter_mail, 2, 0, 1, 2)
-        self.form_Layout.addWidget(self.enter_IBAN, 3, 0, 1, 2)
-        self.form_Layout.addWidget(self.enter_info, 4, 0, 1, 2)
-        self.form_Layout.addWidget(self.append_button , 5, 0, 1, 1 )
-        self.form_Layout.addWidget(self.cancel_button, 5, 3, 1, 1 )
-        self.form.show()
-
-
-    def append_func(self):
-        name = self.enter_name.text()
-        enter_number = self.enter_number.text()
-        enter_mail = self.enter_mail.text()
-        enter_IBAN = self.enter_IBAN.text()
-        enter_info = self.enter_info.toPlainText()
-
-        if name != "":
-            if enter_number == "":
-                enter_number = 0
-            if enter_mail =="":
-                enter_mail = "None"
-            if enter_IBAN == "":
-                enter_IBAN == "None"
-            if enter_info == "":
-                enter_info == "None"
-            self.helper.insert(f"""INSERT INTO Suppliers(name, number, mail, iban, info) 
-                                    VALUES ('{name}', {enter_number}, '{enter_mail}', '{enter_IBAN}', '{enter_info}') """)
-            self.suppliers_list.setLineCount("Suppliers")
-            self.get_suppliers()
-            self.form.close()
 
     def get_suppliers(self):
         self.suppliers_list.clearContents()
@@ -104,7 +44,15 @@ class Suppliers_window(QGridLayout):
         for row in range(len(info)):
             for i in range(1, 6):
                 self.suppliers_list.setItem(row, i-1, CustomQTableWidgetItem(str(info[row][i])))
-            self.suppliers_list.setCellWidget(row, 5, QPushButton("edit"))
+            self.suppliers_list.setCellWidget(row, 5, SuppilerEditButton(selfWidget=self, suppiler_id = info[row][0]))
             self.suppliers_list.setCellWidget(row, 6, Dell_Button_Suppliers(name = info[row][1] , text = "del", wind = self))
 
-        
+    def add_supplier_window(self):
+        self.form = Append_Edit_widget(selfWidget=self, func_name = "Append")
+        self.form.show()
+
+  
+
+
+   
+

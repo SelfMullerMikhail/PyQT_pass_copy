@@ -91,7 +91,9 @@ class Stock_window(QGridLayout):
                                                     WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%'
                                                     ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
-            for i in range(4):
-                self.products_list.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))
-            self.products_list.setCellWidget(row, 4, Add_stock_button(text="add count", id_suppiler=info[row][4], id_stock=info[row][5], orderList = self))
-            self.products_list.setCellWidget(row, 5, Dell_product_button("del", name = info[row][0], order_window = self))
+            self.products_list.setItem(row, 0, CustomQTableWidgetItem(str(info[row][0]))) # name
+            self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1]))) # count
+            self.products_list.setItem(row, 2, CustomQTableWidgetItem(str(round(info[row][2], 2)))) # price
+            self.products_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][3]))) # total money
+            self.products_list.setCellWidget(row, 4, Add_stock_button(text="add count", id_suppiler=info[row][4], id_stock=info[row][5], orderList = self)) # add count
+            self.products_list.setCellWidget(row, 5, Dell_product_button("del", name = info[row][0], order_window = self))  # del
