@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QPushButton, QComboBox
+from PyQt6.QtWidgets import QPushButton, QComboBox, QMessageBox
 from functions.db_Helper import Db_helper
 
 class CustomButtonDell(QPushButton):
@@ -65,7 +65,36 @@ class CustomButtonDellProduct(QPushButton):
         self.clicked.connect(self.func)
 
     def func(self):
-        self.helper.insert(f"""DELETE FROM Menu WHERE name = '{self.name}'""")
+        msgBox = QMessageBox()
+        msgBox.setText(f"Do you want delete product: '{self.name}'?.")
+        yes = QMessageBox.StandardButton.Ok
+        msgBox.setStandardButtons(yes | QMessageBox.StandardButton.Cancel)
+        msgBox.setDefaultButton(QMessageBox.StandardButton.Cancel)
+        msgBox.setIcon(QMessageBox.Icon.Question)
+        msgBox.setWindowTitle("Delete product")
+        result = msgBox.exec()
+        
+        if result == yes:
+            check_product = self.helper.get_list(f"""SELECT * 
+                                                    FROM OpenOrderView 
+                                                    WHERE menu_name = '{self.name}' 
+                                                    GROUP BY table_id;""")
+            if check_product == []:
+                self.helper.insert(f"""DELETE FROM Menu WHERE name = '{self.name}'""")
+                self.order_window.drow_stock()
+            else:
+                text = ""
+                for i in check_product:
+                    text += f"{i[0]}_{i[1]} " + ", "
+                msgBox = QMessageBox()
+                msgBox.setText(f"You can not delete: '{self.name}' becouse some table/s has this product.")
+                msgBox.setDetailedText(text)
+                msgBox.exec()
+
+
+
+
+
         self.window_.drow_products()
         self.central_window.Main_widget.menuTabWidget.clear()
         self.central_window.Main_widget.menuTabWidget.create_full_menu()

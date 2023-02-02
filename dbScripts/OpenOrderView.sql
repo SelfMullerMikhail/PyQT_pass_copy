@@ -1,6 +1,8 @@
 -- SQLite
-
+DROP VIEW OpenOrderView;
 CREATE VIEW OpenOrderView AS
-SELECT Tables.tables_name as table_name, Tables.id as table_id, Menu.name as menu_name, Menu.id as menu_id FROM Menu, Tables, OpenOrder
-WHERE OpenOrder.id_table = Tables.id
-AND OpenOrder.id_menu = Menu.id;
+SELECT Tables.tables_name, Tables.id as table_id, Menu.name as menu_name, OpenOrder.id_menu
+FROM Tables, Menu, OpenOrder
+WHERE Tables.id = OpenOrder.id_table
+AND
+Menu.id = OpenOrder.id_menu; 

@@ -47,7 +47,7 @@ class Category_widget(QGridLayout):
             self.products_list.setItem(row, 0, icon)
             self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1])))
             self.products_list.setCellWidget(row, 2, QPushButton("edit"))
-            self.products_list.setCellWidget(row, 3, Dell_category_button(text = "del", name = info[row][1], wind = self))
+            self.products_list.setCellWidget(row, 3, Dell_category_button(text = "del", name = info[row][1], wind = self, id_category = info[row][0]))
 
     def add_product_window(self):
         self.form = QWidget()

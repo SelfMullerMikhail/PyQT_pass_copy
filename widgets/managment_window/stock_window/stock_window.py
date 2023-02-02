@@ -44,11 +44,7 @@ class Stock_window(QGridLayout):
         self.form_Layout = QGridLayout()
         self.enter_name = QLineEdit()
         self.enter_name.setPlaceholderText('Name')
-        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9]{1,10}")))
-
-        self.enter_price = QLineEdit()
-        self.enter_price.setPlaceholderText("Price for 1 l/kg")
-        self.enter_price.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,7}")))
+        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w\s]{1,10}")))
 
         self.choose_diller = QComboBox()
         self.append_category()
@@ -64,7 +60,6 @@ class Stock_window(QGridLayout):
         self.form.setLayout(self.form_Layout)
 
         self.form_Layout.addWidget(self.enter_name, 0, 0, 1, 2)
-        self.form_Layout.addWidget(self.enter_price, 1, 0, 1, 2)
         self.form_Layout.addWidget(self.choose_diller, 2, 0, 1, 2)
         self.form_Layout.addWidget(self.append_button , 3, 0, 1, 1 )
         self.form_Layout.addWidget(self.cancel_button, 3, 3, 1, 1 )
@@ -80,17 +75,11 @@ class Stock_window(QGridLayout):
 
     def append_func(self):
         name = self.enter_name.text()
-        price = self.enter_price.text()
-        if name != "":
-            if price == "":
-                price = 0
-            diller = self.choose_diller.diller
-            if diller == "":
-                id_diller = 0
-            else:
-                id_diller = self.helper.get_tuple(f"""SELECT id FROM Suppliers WHERE name = '{diller}' """)[0]
+        diller = self.choose_diller.diller
+        if name != "" and diller != "":
+            id_diller = self.helper.get_tuple(f"""SELECT id FROM Suppliers WHERE name = '{diller}' """)[0]
             self.helper.insert(f"""INSERT INTO Stock(name, count, price, id_Suppiler) 
-                                    VALUES ('{name}', 0, {price}, {id_diller}) """)
+                                    VALUES ('{name}', 0, 0, {id_diller}) """)
             self.products_list.setLineCount("Stock")
             self.drow_stock()
             self.form.close()
