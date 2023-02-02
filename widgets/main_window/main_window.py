@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import  QGridLayout
+from PyQt6.QtWidgets import  QGridLayout, QLabel
 
 from widgets.main_window.tableListWidget import TablesListWidget
 from widgets.main_window.menuTabWidget import MenuTabWidget
@@ -24,17 +24,18 @@ class Main_widget(QGridLayout):
         self.activeTab = activeTab
         self.ordersListWidget = OrdersListWidget(active_window = activeTab)
         self.ordersListWidget.setColumnCount(7)
-        self.ordersListWidget.add_columns(((0, "name"), (1, "price"), (2, "count"), (3, "total")))
+        self.ordersListWidget.add_columns(((0, "name"), (1, "price"), (2, "count"), (3, "total"), (4, ""), (5, ""), (6, "")))
         self.ordersListWidget.settingSizeColumn(( 110, 110, 70, 100, 55, 55, 55))
         self.ordersListWidget.setRowCount(15)
-        self.drow_orders()
+
 
         self.tablesListWidget = TablesListWidget(self, activeTab = activeTab)
         self.menuTabWidget = MenuTabWidget(activeTab = activeTab, ordersListWidget = self)
         self.payButton = PayButton(text="Payment", centralWidget = self.centralWidget, activeTab = activeTab, tablesListWidget = self.tablesListWidget)
-        self.clearButton = ClearButton(activeTab = activeTab, ordersListWidget = self.ordersListWidget) 
+        self.clearButton = ClearButton(activeTab = activeTab, ordersListWidget = self.ordersListWidget, selfWidget = self) 
         self.delTableButton = DelTableButton(self.tablesListWidget)
         self.addTableButton = AddTableButton(self.tablesListWidget)
+        self.summ_lable = QLabel()
 
         self.clearButton.setStyleSheet(clearButtonStyle)
         self.payButton.setStyleSheet(payButtonStyle)
@@ -47,15 +48,20 @@ class Main_widget(QGridLayout):
         self.addWidget(self.clearButton, 15, 7, 1, 3)
         self.addWidget(self.delTableButton, 19, 0, 1, 3)
         self.addWidget(self.addTableButton, 20, 0, 1, 3)
+        self.addWidget(self.summ_lable, 14, 9, 1, 1)
+        self.drow_orders()
+
+    def set_summ_label(self):
+        summ = self.helper.get_list(f"""SELECT SUM(summ_position) FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab};""")[0][0]
+        self.summ_lable.setText(f"sum: {summ}")
 
     def drow_orders(self):
         self.ordersListWidget.clearContents()
-        info = self.helper.get_list((f"""SELECT Menu.name, Menu.price, count(count), (Menu.price * count(count)), Menu.id 
-                                            FROM  OpenOrder, Menu
-                                            WHERE OpenOrder.id_menu = Menu.id AND id_table = {self.activeTab.activeTab}
-                                            GROUP BY id_menu;"""))
+        info = self.helper.get_list((f"""SELECT * FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab};"""))
         for row in range(len(info)):
             for i in range(4):
+                
+                self.set_summ_label()
                 self.ordersListWidget.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))
             self.ordersListWidget.setCellWidget(row, 4, Сontrol_button(name = "+", orderList = self, activeTab = self.activeTab, menu_id = info[row][4]))
             self.ordersListWidget.setCellWidget(row, 5, Сontrol_button(name = "-", orderList = self, activeTab = self.activeTab, menu_id = info[row][4]))

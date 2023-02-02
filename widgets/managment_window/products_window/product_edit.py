@@ -10,12 +10,12 @@ from functions.db_Helper import Db_helper
 # from widgets.managment_window.products_window.order_list_products import Order_list_products
 
 class Product_edit(QPushButton):
-    def __init__(self, text, id_menu, listWidget, window,  central_window):
+    def __init__(self, text, menu_id, listWidget, window,  central_window):
         super().__init__(text=text)
         self.listWidget = listWidget
         self.helper = Db_helper("Alpha.db")
         self.feather = None
-        self.id_menu = id_menu
+        self.id_menu = menu_id
         self.window_= window 
         self.central_window = central_window
         self.clicked.connect(self.add_product_window)

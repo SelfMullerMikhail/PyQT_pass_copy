@@ -55,7 +55,7 @@ class Category_widget(QGridLayout):
         self.form_Layout = QGridLayout()
         self.enter_name = QLineEdit()
         self.enter_name.setPlaceholderText('Name')
-        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z]{1,15}")))
+        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w\s]{1,15}")))
         self.enter_picture = QPushButton("Add picture")
         self.enter_picture.clicked.connect(self.choose_photo) 
         self.enter_picture.setIcon(get_path_icon(self.file_put))

@@ -56,17 +56,18 @@ class CustomComboBox(QComboBox):
         self.custText = e
 
 class CustomButtonDellProduct(QPushButton):
-    def __init__(self, name, window, central_window, text = ''):
+    def __init__(self, menu_id, menu_name, window, central_window, text = ''):
         super().__init__(text = text)
         self.window_ = window
         self.helper = Db_helper("Alpha.db")
-        self.name = name
+        self.menu_id = menu_id
+        self.menu_name = menu_name
         self.central_window = central_window
         self.clicked.connect(self.func)
 
     def func(self):
         msgBox = QMessageBox()
-        msgBox.setText(f"Do you want delete product: '{self.name}'?.")
+        msgBox.setText(f"Do you want delete product: '{self.menu_name}'?.")
         yes = QMessageBox.StandardButton.Ok
         msgBox.setStandardButtons(yes | QMessageBox.StandardButton.Cancel)
         msgBox.setDefaultButton(QMessageBox.StandardButton.Cancel)
@@ -77,17 +78,17 @@ class CustomButtonDellProduct(QPushButton):
         if result == yes:
             check_product = self.helper.get_list(f"""SELECT * 
                                                     FROM OpenOrderView 
-                                                    WHERE menu_name = '{self.name}' 
+                                                    WHERE id_menu = '{self.menu_id}' 
                                                     GROUP BY table_id;""")
             if check_product == []:
-                self.helper.insert(f"""DELETE FROM Menu WHERE name = '{self.name}'""")
+                self.helper.insert(f"""DELETE FROM Menu WHERE id = '{self.menu_id}'""")
                 self.order_window.drow_stock()
             else:
                 text = ""
                 for i in check_product:
                     text += f"{i[0]}_{i[1]} " + ", "
                 msgBox = QMessageBox()
-                msgBox.setText(f"You can not delete: '{self.name}' becouse some table/s has this product.")
+                msgBox.setText(f"You can not delete: '{self.menu_name}' becouse some table/s has this product.")
                 msgBox.setDetailedText(text)
                 msgBox.exec()
 

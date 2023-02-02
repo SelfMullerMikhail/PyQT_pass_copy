@@ -86,7 +86,7 @@ class Stock_window(QGridLayout):
 
     def drow_stock(self):
         self.products_list.clearContents()
-        info = self.helper.get_list((f"""SELECT Name, Count, Price, (Count/1000*Price) as 'Total money', id_Suppiler, id 
+        info = self.helper.get_list((f"""SELECT Name, Count, Price, (Count*0.001*Price) as 'Total money', id_Suppiler, id 
                                                     FROM Stock
                                                     WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%'
                                                     ORDER BY {self.sorting.category_search};"""))

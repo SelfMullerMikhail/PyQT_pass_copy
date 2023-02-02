@@ -43,7 +43,7 @@ class Archive_widget(QGridLayout):
 
     def drow_archive_all(self):
         self.archive_list.clearContents()
-        all_money = self.helper.get_list("""SELECT sum(cash), sum(card), (sum(cash)+sum(card))  
+        all_money = self.helper.get_list("""SELECT sum(cash), sum(card), (sum(cash)+sum(card))
                                             FROM CloseOrderView;""")[0]
         info = self.helper.get_list(f"""SELECT * FROM CloseOrderView WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%' GROUP BY id_table ORDER BY {self.sorting.category_search}""")
         self.archive_list.setRowCount(len(info))
@@ -51,15 +51,14 @@ class Archive_widget(QGridLayout):
         self.total_card.setText(f"card: {all_money[1]}")
         self.total_money.setText(f"total: {all_money[2]}")
         for row in range(len(info)):
-            self.archive_list.setCellWidget(row, 0, InfoProductsOrder(selfWidget=self, row = row, id_table = str(info[row][1])))
-            self.archive_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][2]))) 
-            self.archive_list.setItem(row, 2, CustomQTableWidgetItem(str(info[row][3]))) 
-            self.archive_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) 
-            self.archive_list.setItem(row, 4, CustomQTableWidgetItem(str(info[row][7]))) 
-
-            self.archive_list.setItem(row, 5, CustomQTableWidgetItem(str(info[row][10])))
-            self.archive_list.setItem(row, 6, CustomQTableWidgetItem(str(info[row][8]))) 
-            self.archive_list.setItem(row, 7, CustomQTableWidgetItem(str(info[row][9]))) 
-            self.archive_list.setCellWidget(row, 8, DelCloseOrderButton(text = "del", id_closeOrder=info[row][0], archive_widget = self))
+            self.archive_list.setCellWidget(row, 0, InfoProductsOrder(selfWidget=self, row = row, id_table = str(info[row][1])))# id_table
+            self.archive_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][2]))) # name_table
+            self.archive_list.setItem(row, 2, CustomQTableWidgetItem(str(info[row][3]))) # client_name
+            self.archive_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) # cash
+            self.archive_list.setItem(row, 4, CustomQTableWidgetItem(str(info[row][7]))) # card
+            self.archive_list.setItem(row, 5, CustomQTableWidgetItem(str(info[row][6]+info[row][7] ))) # total 
+            self.archive_list.setItem(row, 6, CustomQTableWidgetItem(str(info[row][8]))) # time_open
+            self.archive_list.setItem(row, 7, CustomQTableWidgetItem(str(info[row][9]))) # time_close
+            self.archive_list.setCellWidget(row, 8, DelCloseOrderButton(text = "del", id_closeOrder=info[row][0], archive_widget = self)) # del
     def drow_arhive_info(self):
         ...
