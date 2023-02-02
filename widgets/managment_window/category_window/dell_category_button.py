@@ -15,8 +15,7 @@ class Dell_category_button(QPushButton):
 
     def func(self):
         msgBox = QMessageBox()
-        msgBox.setText(f"""Do you want delete category: '{self.name}'?.
-                            You will lost all products from this category""")
+        msgBox.setText(f"""Are you sure you want to remove category: '{self.name}'?""")
         yes = QMessageBox.StandardButton.Ok
         msgBox.setStandardButtons(yes | QMessageBox.StandardButton.Cancel)
         msgBox.setDefaultButton(QMessageBox.StandardButton.Cancel)
@@ -43,7 +42,7 @@ class Dell_category_button(QPushButton):
                                                             GROUP BY name_menu;""")
                     text = ""
                     for i in check_products:
-                        text += f"{i[1]}_{i[0]} " + ", "
+                        text += f"{i[1]} " + ", "
                     print(check_products)
                     print(text)
                     print(self.id_category)

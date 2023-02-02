@@ -1,5 +1,7 @@
+-- SQLite
 
+DROP VIEW MenuView;
 CREATE VIEW MenuView AS 
-SELECT Menu.Image as image, Menu.name as name, Category.name as category, 0 as cost , price as price, 0 as markup, Menu.id 
+SELECT Menu.Image as name, Menu.name as name_menu, Category.name as name_category , price as price_menu, Menu.id as id_menu
 FROM Menu, Category 
 WHERE Menu.category = Category.id;

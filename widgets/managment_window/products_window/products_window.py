@@ -20,7 +20,7 @@ class Products_window(QGridLayout):
         self.products_list = self.create_product_list(active_window = active_window)
         self.quick_search = QLineEditSorting(selfWidget=self)
         self.quick_search.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9]{0,15}"))) 
-        sort_list = ["name", "category", "cost", "price", "markup", "image"]
+        sort_list = ["menu_name", "menu_price", "category_name", "cost_menu", "stocks_money", "cost_procent", "menu_image"]
         self.sorting = QComboBoxSorting(sort_list=sort_list, selfWidget=self, quick_search=self.quick_search)
         self.append_button = Append_product_button("append", window=self, products_window = self, central_wind = self.central_window)
 
@@ -37,7 +37,7 @@ class Products_window(QGridLayout):
         products_list = OrdersListWidget(active_window = active_window, central_window = self.central_window)
         products_list.setColumnCount(9) 
         products_list.setLineCount("Menu")
-        products_list.add_columns(((0, ""), (1, "Name"), (2, "Category"), (3, "Cost"), (4, "Price"), (5, "Markup"), (6, ""), (7, ""), (8, "")))
+        products_list.add_columns(((0, ""), (1, "Name"), (2, "Category"), (3, "Cost"), (4, "Price"), (5, "Cost %"), (6, ""), (7, ""), (8, "")))
         products_list.settingSizeColumn((40, 70, 70, 70, 70, 70, 30, 30, 30))
         products_list.settingSizeRow(50)
         return products_list
@@ -45,18 +45,18 @@ class Products_window(QGridLayout):
     def drow_products(self):
         self.products_list.clearContents()
         self.products_list.setLineCount("Menu")
-        info = self.helper.get_list((f"""SELECT image, name, category, 0 as cost ,price, 0 as markup, id 
-                                                    FROM MenuView 
-                                                    WHERE {self.sorting.category_search} LIKE'%{self.quick_search.quick_search_line}%'
-                                                    ORDER BY {self.sorting.category_search};"""))
+        info = self.helper.get_list((f"""SELECT * FROM ViewCountCashCardTotalSumCost
+                                        WHERE {self.sorting.category_search} LIKE'%{self.quick_search.quick_search_line}%'
+                                        ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
-            self.products_list.setCellWidget(row, 0, InfoProductsMenu(icon=info[row][0], id_menu=info[row][6]))
-            for i in range(1, 6):
-                self.products_list.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))
-            edit_button = Product_edit(text="edit", id_menu=info[row][6], listWidget = OrdersListWidget, window=self, central_window = self.central_window )
-            del_button = CustomButtonDellProduct(text="del", name=info[row][1], window=self, central_window = self.central_window)
-            self.products_list.setCellWidget(row, 7, edit_button)
-            self.products_list.setCellWidget(row, 8, del_button)
+            self.products_list.setCellWidget(row, 0, InfoProductsMenu(icon=info[row][0], id_menu=info[row][0])) # image
+            self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1]))) # name
+            self.products_list.setItem(row, 2, CustomQTableWidgetItem(str(info[row][4]))) # category
+            self.products_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) # cost
+            self.products_list.setItem(row, 4, CustomQTableWidgetItem(str(info[row][3]))) # price
+            self.products_list.setItem(row, 5, CustomQTableWidgetItem(f"{round(int(info[row][8]), 3)} %")) # procent cost
+            self.products_list.setCellWidget(row, 7, Product_edit(text="edit", menu_id=info[row][2], listWidget = OrdersListWidget, window=self, central_window = self.central_window ))
+            self.products_list.setCellWidget(row, 8, CustomButtonDellProduct(text="del", menu_id=info[row][2], menu_name= info[row][1], window=self, central_window = self.central_window))
 
     def info_drow(self, name):
         return lambda: print(name)

@@ -19,7 +19,7 @@ class Add_stock_button(QPushButton):
         self.form_Layout = QGridLayout()
 
         self.enter_price = QLineEdit()
-        self.enter_price.setPlaceholderText('Price tl')
+        self.enter_price.setPlaceholderText('Price tl for 1 kg,L')
         self.enter_price.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,10}")))
 
         self.enter_count = QLineEdit()

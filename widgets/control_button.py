@@ -29,6 +29,7 @@ class Сontrol_button(QPushButton):
                 f"""DELETE FROM OpenOrder
                     WHERE id_table = {self.activeTab.activeTab} and id_menu = {self.menu_id}""")
         self.orderList.drow_orders()
+        self.orderList.set_summ_label()
 
     def minus_position(self, e):
         id_position = self.helper.get_list(F"""SELECT MAX(id) 
