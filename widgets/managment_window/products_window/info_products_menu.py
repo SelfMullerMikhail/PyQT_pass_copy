@@ -34,8 +34,8 @@ class InfoProductsMenu(QPushButton):
         info = self.helper.get_list(f"""SELECT * FROM TechnologyCardView WHERE id_menu = {self.id_menu};""")
         self.info_products.setRowCount(len(info))
         for row in range(len(info)):
-            self.info_products.setItem(row, 0, CustomQTableWidgetItem(str(info[row][0])))
-            self.info_products.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1])))
-            self.info_products.setItem(row, 2, CustomQTableWidgetItem(str(info[row][2])))
-            self.info_products.setItem(row, 3, CustomQTableWidgetItem(str(info[row][3])))
-            self.info_products.setItem(row, 4, CustomQTableWidgetItem(str(round(info[row][4], 3))))
+            self.info_products.setItem(row, 0, CustomQTableWidgetItem(str(info[row][0]))) # product
+            self.info_products.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1]))) # suppiler
+            self.info_products.setItem(row, 2, CustomQTableWidgetItem(str(info[row][2]))) # count
+            self.info_products.setItem(row, 3, CustomQTableWidgetItem(str(round(info[row][3], 2)))) # price
+            self.info_products.setItem(row, 4, CustomQTableWidgetItem(str(round(info[row][4], 2)))) # cost

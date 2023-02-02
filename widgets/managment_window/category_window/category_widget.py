@@ -6,6 +6,7 @@ from PyQt6.QtCore import QRegularExpression, QSize
 from widgets.ordersListWidget import OrdersListWidget
 from widgets.sorting_widgets import QComboBoxSorting, QLineEditSorting
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
+from widgets.managment_window.category_window.category_edit_button import CategoryEditButton
 from functions.db_Helper import Db_helper
 from widgets.managment_window.category_window.dell_category_button import Dell_category_button
 from func_get_path_icon import get_path_icon
@@ -46,7 +47,7 @@ class Category_widget(QGridLayout):
             icon.setIcon(get_path_icon(info[row][2]))
             self.products_list.setItem(row, 0, icon)
             self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1])))
-            self.products_list.setCellWidget(row, 2, QPushButton("edit"))
+            self.products_list.setCellWidget(row, 2, CategoryEditButton(id_category = info[row][0], selfWidget = self))
             self.products_list.setCellWidget(row, 3, Dell_category_button(text = "del", name = info[row][1], wind = self, id_category = info[row][0]))
 
     def add_product_window(self):
@@ -102,4 +103,4 @@ class Category_widget(QGridLayout):
             self.file_put = 'book.svg'
             self.form.close()
 
-        
+

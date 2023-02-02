@@ -23,5 +23,7 @@ class Managment_widget(QVBoxLayout):
         self.addWidget(self.upMenu.activate("Products"))
 
         
+
+        
         
 
