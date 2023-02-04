@@ -26,12 +26,12 @@ class TablesListWidget(QListWidget):
         for i in self.inf:
             self.create_table(i[2], i[0])
 
-# ЭТУ ПРОБЛЕМУ НУЖНО РЕШИТЬ!!!!!
-    def getMaxTabId():
-        helper = Db_helper("Alpha.db")
-        return helper.get_list("SELECT MAX(id) FROM Tables")[0][0]
+    def getMaxTabId(self):
+        return self.helper.get_list("SELECT MAX(id) FROM Tables")[0][0]
 
-    def create_table(self, tab_name = "tab", id_tab = getMaxTabId()):
+    def create_table(self, tab_name = "tab", id_tab = None):
+        if id_tab == None:
+            id_tab = self.getMaxTabId()
         self.customItem = QListWidgetItem(self.customListWidgetItem(tab_name, id_tab))
         self.customItem.indx = id_tab
         self.customItem.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable)
