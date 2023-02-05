@@ -8,6 +8,7 @@ class ActiveTable():
 
     def __init__(self):
         self.helper = Db_helper("Alpha.db")
+        self.activeUser = "0"
         tab_count = self.helper.get_list("SELECT COUNT(id) FROM Tables")[0][0]
         if tab_count == 0:
             self.helper.insert(f"""INSERT INTO Tables (id_client, tables_name)

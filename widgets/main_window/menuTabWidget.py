@@ -33,8 +33,9 @@ class MenuTabWidget(QTabWidget):
         
 
     def buttonFunctionComplex(self, i):
+        print(self.activeTab.activeUser)
         self.helper.insert(f"""INSERT INTO OpenOrder(id_client, id_table, id_menu, count)
-                                VALUES({1},{self.activeTab.activeTab} ,{i}, 1)""")
+                                VALUES({self.activeTab.activeUser[0]}, {self.activeTab.activeTab} ,{i}, 1)""")
         self.ordersListWidget.drow_orders()
 
         

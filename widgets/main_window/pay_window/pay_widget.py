@@ -41,7 +41,7 @@ class Pay_widget(QWidget):
         self.summ_numb.setMaximumSize(50,50)
 
         self.comment = QTextEdit()
-        self.comment.setPlaceholderText("SHEOFIN")
+        self.comment.setPlaceholderText("Info")
 
         self.cash = QLineEdit()
         self.cash.setPlaceholderText("Cash")
@@ -123,7 +123,7 @@ class Pay_widget(QWidget):
         if ((self.cash_insert + self.card_insert) >= self.summ_order) and (self.card_insert <= self.summ_order):
 
             self.helper.insert(f"""INSERT INTO ClosedOrder (id_table, name_table, client_name, menu_name, count, cash, card, time_open, menu_price)
-                                SELECT OpenOrder.id_table, Tables.tables_name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open, Menu.price
+                                SELECT OpenOrder.id_table, Client.name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open, Menu.price
                                 FROM OpenOrder, Menu, Client, Tables
                                 WHERE OpenOrder.id_menu = Menu.id AND OpenOrder.id_client = Client.id
                                 AND OpenOrder.id_table = Tables.id AND Tables.id_client = Client.id

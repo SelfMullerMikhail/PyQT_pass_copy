@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGridLayout, QLabel, QPushButton, QMessageBox, QGridLayout
+from PyQt6.QtWidgets import QGridLayout, QLabel, QGridLayout
 
 from widgets.ordersListWidget import OrdersListWidget
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
@@ -51,7 +51,7 @@ class Archive_widget(QGridLayout):
         self.total_card.setText(f"card: {all_money[1]}")
         self.total_money.setText(f"total: {all_money[2]}")
         for row in range(len(info)):
-            self.archive_list.setCellWidget(row, 0, InfoProductsOrder(selfWidget=self, row = row, id_table = str(info[row][1])))# id_table
+            self.archive_list.setCellWidget(row, 0, InfoProductsOrder(row = row, id_table = str(info[row][1])))# id_table
             self.archive_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][2]))) # name_table
             self.archive_list.setItem(row, 2, CustomQTableWidgetItem(str(info[row][3]))) # client_name
             self.archive_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) # cash
@@ -60,5 +60,3 @@ class Archive_widget(QGridLayout):
             self.archive_list.setItem(row, 6, CustomQTableWidgetItem(str(info[row][8]))) # time_open
             self.archive_list.setItem(row, 7, CustomQTableWidgetItem(str(info[row][9]))) # time_close
             self.archive_list.setCellWidget(row, 8, DelCloseOrderButton(text = "del", id_closeOrder=info[row][0], archive_widget = self)) # del
-    def drow_arhive_info(self):
-        ...

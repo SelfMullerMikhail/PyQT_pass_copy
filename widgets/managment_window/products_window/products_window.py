@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGridLayout, QLineEdit
+from PyQt6.QtWidgets import QGridLayout
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression
 
@@ -73,7 +73,4 @@ class Products_window(QGridLayout):
 
     def info_drow(self, name):
         return lambda: print(name)
-
-
-
 
