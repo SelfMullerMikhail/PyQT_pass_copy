@@ -18,7 +18,7 @@ class Managment_widget(QVBoxLayout):
         self.upMenu.create_tab("Stock", "layers.svg", self.stock_window)
         self.upMenu.create_tab("Category", "file.svg", Category_widget(active_window = active_window, central_window = central_window))
         self.upMenu.create_tab("Suppliers", "truck.svg", Suppliers_window(active_window = active_window, central_window = central_window))
-        self.upMenu.create_tab("Statistic", "bar-chart-2.svg", QGridLayout())
+        # self.upMenu.create_tab("Statistic", "bar-chart-2.svg", QGridLayout())
 
         self.addWidget(self.upMenu.activate("Products"))
 

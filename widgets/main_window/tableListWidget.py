@@ -19,15 +19,15 @@ class TablesListWidget(QListWidget):
         self.itemChanged.connect(self.change_name)
 
     def getTablesCount(self):
-        return self.helper.get_list("SELECT COUNT(id) FROM Tables")[0][0]
+        return self.helper.get_list(f"SELECT COUNT(id) FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0]
 
     def getTabs(self):
-        self.inf = self.helper.get_list("SELECT id, id_client, tables_name FROM Tables")
+        self.inf = self.helper.get_list(f"SELECT id, id_client, tables_name FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")
         for i in self.inf:
             self.create_table(i[2], i[0])
 
     def getMaxTabId(self):
-        return self.helper.get_list("SELECT MAX(id) FROM Tables")[0][0]
+        return self.helper.get_list(f"SELECT MAX(id) FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0]
 
     def create_table(self, tab_name = "tab", id_tab = None):
         if id_tab == None:
@@ -57,7 +57,7 @@ class TablesListWidget(QListWidget):
 
     def add_table(self):
         self.helper.insert(f"""INSERT INTO Tables (id_client, tables_name)
-                            VALUES ({1}, 'tab')""")
+                            VALUES ({self.activeTab.activeUser[0]}, 'tab')""")
         self.clear()
         self.getTabs()
 

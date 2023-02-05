@@ -28,7 +28,6 @@ class Main_widget(QGridLayout):
         self.ordersListWidget.settingSizeColumn(( 110, 110, 70, 100, 55, 55, 55))
         self.ordersListWidget.setRowCount(15)
 
-
         self.tablesListWidget = TablesListWidget(self, activeTab = activeTab)
         self.menuTabWidget = MenuTabWidget(activeTab = activeTab, ordersListWidget = self)
         self.payButton = PayButton(text="Payment", centralWidget = self.centralWidget, activeTab = activeTab, tablesListWidget = self.tablesListWidget)
@@ -52,12 +51,34 @@ class Main_widget(QGridLayout):
         self.drow_orders()
 
     def set_summ_label(self):
-        summ = self.helper.get_list(f"""SELECT SUM(summ_position) FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab};""")[0][0]
-        self.summ_lable.setText(f"sum: {summ}")
+        summ_lable = 0
+        summ = self.helper.get_list(f"""SELECT sum(Menu.price * OpenOrder.count)
+                                    FROM  OpenOrder, Menu
+                                    WHERE OpenOrder.id_menu = Menu.id 
+                                    AND
+                                    OpenOrder.id_table = {self.activeTab.activeTab}
+                                    GROUP BY Menu.id;""")
+        for i in summ:
+            summ_lable += int(i[0])
+        
+        self.summ_lable.setText(f"sum: {summ_lable}")
 
     def drow_orders(self):
         self.ordersListWidget.clearContents()
-        info = self.helper.get_list((f"""SELECT * FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab};"""))
+        info = self.helper.get_list((f"""SELECT Menu.name as menu_name, 
+                                        Menu.price as menu_prise, 
+                                        count(count) as count, 
+                                        (Menu.price * count(count)) as summ_position
+                                        , Menu.id as id_menu,
+                                        OpenOrder.id_table as id_table,
+                                        OpenOrder.id_client
+                                        FROM  OpenOrder, Menu
+                                        WHERE OpenOrder.id_menu = Menu.id 
+                                        AND OpenOrder.id_client = {self.activeTab.activeUser[0]}
+                                        AND OpenOrder.id_table = {self.activeTab.activeTab}
+                                        GROUP BY id_menu;"""))
+        
+        # SELECT * FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab} AND id_client = {self.activeTab.activeUser[0]}
         for row in range(len(info)):
             for i in range(4):
                 

@@ -7,11 +7,10 @@ from widgets.ordersListWidget import OrdersListWidget
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 
 class InfoProductsOrder(QPushButton):
-    def __init__(self, id_table, row, selfWidget):
+    def __init__(self, id_table, row):
         super().__init__(text=id_table)
         self.helper = Db_helper("Alpha.db")
         self.row = row
-        self.selfWidget = selfWidget
         self.id_table = id_table
         self.setIcon(get_path_icon('tablet.svg'))
         self.setIconSize(QSize(25, 25))

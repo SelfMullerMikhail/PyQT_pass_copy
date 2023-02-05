@@ -51,8 +51,6 @@ class Suppliers_window(QGridLayout):
         self.form = Append_Edit_widget(selfWidget=self, func_name = "Append")
         self.form.show()
 
-  
-
 
    
 

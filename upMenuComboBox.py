@@ -3,6 +3,7 @@ from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QWidget, QGridLayout
 
 from func_get_path_icon import get_path_icon
+from widgets.day_off.dayOf_widget import DayOf_widget
 
 class UpMenu_comboBox(QComboBox):
 
@@ -29,6 +30,9 @@ class UpMenu_comboBox(QComboBox):
         self.active_window.hide()
         self.active_window = self.all_windows_dickt[name]
         self.all_windows_dickt[name].show()
+        obj = self.active_window.layout()
+        if obj.__class__ == DayOf_widget:
+            obj.upgrading()
 
 
     def create_tab(self, name, icon, obj):
@@ -36,6 +40,7 @@ class UpMenu_comboBox(QComboBox):
         self.all_windows_dickt[name] = self.create_Widget_Grid(obj)
 
     def activate(self, name):
+        self.all_windows_dickt[name]
         self.active_window = self.all_windows_dickt[name]
         self.active_window.show()
         return self.main_widget

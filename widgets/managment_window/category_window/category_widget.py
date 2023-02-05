@@ -76,7 +76,6 @@ class Category_widget(QGridLayout):
         self.form.close()
         self.file_put = 'book.svg'
 
-
     def choose_photo(self):
         wind = QDialog()
         self.file = QFileDialog.getOpenFileName(wind, "Open file", "C:\\", "Image (*.png)")[0]
@@ -85,7 +84,6 @@ class Category_widget(QGridLayout):
             self.file_put = 'book.svg'
         self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\category_window" ,f"feather\{self.file_put}")
         self.enter_picture.setIcon(get_path_icon(self.file_put))
-
 
     def append_func(self):
         name = self.enter_name.text()
@@ -101,6 +99,3 @@ class Category_widget(QGridLayout):
             self.central_window.Main_widget.menuTabWidget.clear()
             self.central_window.Main_widget.menuTabWidget.create_full_menu()
             self.file_put = 'book.svg'
-            self.form.close()
-
-
