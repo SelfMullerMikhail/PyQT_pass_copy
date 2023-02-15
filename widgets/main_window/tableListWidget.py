@@ -22,6 +22,10 @@ class TablesListWidget(QListWidget):
         return self.helper.get_list(f"SELECT COUNT(id) FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0]
 
     def getTabs(self):
+        self.clear()
+        count = int(self.helper.get_list(f"SELECT COUNT(id) from Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0])
+        if count == 0:
+            self.create_table()
         self.inf = self.helper.get_list(f"SELECT id, id_client, tables_name FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")
         for i in self.inf:
             self.create_table(i[2], i[0])
@@ -29,9 +33,12 @@ class TablesListWidget(QListWidget):
     def getMaxTabId(self):
         return self.helper.get_list(f"SELECT MAX(id) FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0]
 
+    def getMaxTabIdAll(self):
+        return self.helper.get_list(f"SELECT MAX(id) FROM Tables")[0][0]
+
     def create_table(self, tab_name = "tab", id_tab = None):
         if id_tab == None:
-            id_tab = self.getMaxTabId()
+            id_tab = int(self.getMaxTabIdAll())+1
         self.customItem = QListWidgetItem(self.customListWidgetItem(tab_name, id_tab))
         self.customItem.indx = id_tab
         self.customItem.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable)
@@ -51,19 +58,18 @@ class TablesListWidget(QListWidget):
             self.helper.insert(f"DELETE FROM Tables WHERE id = {self.activeTab.activeTab}")
             self.helper.insert(f"DELETE FROM OpenOrder WHERE id_table = {self.activeTab.activeTab}")
             self.ordersListWidget.drow_orders()
-            self.clear()
             self.getTabs()
             self.activeTab.activeTab = self.helper.get_list("SELECT MIN(id) FROM Tables")[0][0]
 
     def add_table(self):
         self.helper.insert(f"""INSERT INTO Tables (id_client, tables_name)
                             VALUES ({self.activeTab.activeUser[0]}, 'tab')""")
-        self.clear()
         self.getTabs()
 
     def one_click(self, e):
         self.activeTab.activeTab = e.indx
         self.ordersListWidget.drow_orders()
+        self.ordersListWidget.set_summ_label()
 
     def change_name(self, e):
         self.helper.insert(f"UPDATE Tables SET tables_name = '{e.text()}' WHERE id = {e.indx}")

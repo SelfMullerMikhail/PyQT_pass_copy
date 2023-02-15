@@ -7,9 +7,9 @@ from widgets.ordersListWidget import OrdersListWidget
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 
 class InfoProductsOrder(QPushButton):
-    def __init__(self, id_table, row):
+    def __init__(self, id_table, row, db):
         super().__init__(text=id_table)
-        self.helper = Db_helper("Alpha.db")
+        self.helper = Db_helper(db)
         self.row = row
         self.id_table = id_table
         self.setIcon(get_path_icon('tablet.svg'))
@@ -34,7 +34,7 @@ class InfoProductsOrder(QPushButton):
 
     def drow_ingridients_info(self):
         info = self.helper.get_list(f"""SELECT menu_name, count, (menu_price), (count * menu_price)
-                                        FROM CloseOrderView 
+                                        FROM CloseOrderViewButton 
                                         WHERE id_table = {self.id_table};""")
         self.info_products.setRowCount(len(info))
         for row in range(len(info)):
