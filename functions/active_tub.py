@@ -5,7 +5,7 @@ from functions.db_Helper import Db_helper
 class ActiveTable():
     def get_active(self):
         return self.activeTab
-
+    
     def __init__(self):
         self.helper = Db_helper("Alpha.db")
         self.activeUser = "0"

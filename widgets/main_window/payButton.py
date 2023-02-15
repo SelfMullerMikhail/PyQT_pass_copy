@@ -1,6 +1,6 @@
 import os, sys
 
-from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtWidgets import QPushButton, QMessageBox
 from PyQt6.QtCore import QSize
 
 sys.path.append( os.path.dirname( __file__ ).replace("main_window", ""))
@@ -24,8 +24,15 @@ class PayButton(QPushButton):
         
 
     def anyFunction(self, e):
+        date = self.helper.get_list("""SELECT strftime("%Y-%m-%d", datetime('now', '-1 day'))""")[0][0]
         self.proof = self.helper.get_list(f"""SELECT id FROM OpenOrder WHERE id_table = {self.activeTab.activeTab}""")
-        if self.proof != []:
-            self.centralWidget.takeCentralWidget()
-            self.pay_widget = Pay_widget(self.activeTab, centralWidget = self.centralWidget, tablesListWidget = self.tablesListWidget)
-            self.centralWidget.setCentralWidget(self.pay_widget)
+        self.closed_day = self.helper.get_list(f"""SELECT * FROM ClosedOrder WHERE time_close LIKE '%{date}%';""")
+        if self.closed_day == []:
+            if self.proof != []:
+                self.centralWidget.takeCentralWidget()
+                self.pay_widget = Pay_widget(self.activeTab, centralWidget = self.centralWidget, tablesListWidget = self.tablesListWidget)
+                self.centralWidget.setCentralWidget(self.pay_widget)
+        else:
+                msgBox = QMessageBox()
+                msgBox.setText(f"You need close this day.")
+                msgBox.exec()

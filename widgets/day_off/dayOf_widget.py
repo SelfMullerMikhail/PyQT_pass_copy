@@ -14,6 +14,7 @@ class DayOf_widget(QGridLayout):
         self.mainWidget = mainWidget
         self.helper = Db_helper("Alpha.db")
         self.helper_beta = Db_helper("Beta.db")
+        self.money = 0
 
         self.list_ = {1: "Cash", 2: "Card"}
         self.i = 1
@@ -91,22 +92,30 @@ class DayOf_widget(QGridLayout):
         if e == "":
             e = 0
         self.e_cash = int(e)
-        money = int(e) - int(self.all_summ[0][0])
-        self.difference_cash.setText(str(money))
+        try:
+            self.money = int(e) - int(self.all_summ[0][0])
+        except:
+            ...
+        self.difference_cash.setText(str(self.money))
         self.set_difference_summ()
 
     def fact_card_func(self, e):
-        if e == "":
-            e = 0
-        self.e_card = int(e)
-        money = int(e) - int(self.all_summ[0][1])
-        self.difference_card.setText(str(money))
-        self.set_difference_summ()
+        try:
+            if e == "":
+                e = 0
+            self.e_card = int(e)
+            self.money = int(e) - int(self.all_summ[0][1])
+            self.difference_card.setText(str(self.money))
+            self.set_difference_summ()
+        except:
+            ...
 
     def set_difference_summ(self):
-        difference = (self.e_cash + self.e_card) - int(self.all_summ[0][0]+int(self.all_summ[0][1]))
-        self.difference_sum.setText(str(difference))
-        
+        try:
+            difference = (self.e_cash + self.e_card) - int(self.all_summ[0][0]+int(self.all_summ[0][1]))
+            self.difference_sum.setText(str(difference))
+        except:
+            ...
     def changer_genetarion(self):
         while True:
             self.i += 1
@@ -127,12 +136,15 @@ class DayOf_widget(QGridLayout):
         self.all_summ = self.helper.get_list(f"""SELECT sum(cash), sum(card) FROM CloseOrderView;""")
         self.teory_cash.setText(f"Cash: {self.all_summ[0][0]}")
         self.teory_card.setText(f"Card: {self.all_summ[0][1]}")
-        self.teory_summ.setText(f"Sum: {int(self.all_summ[0][0]) + int(self.all_summ[0][1])}")
+        try:
+            self.teory_summ.setText(f"Sum: {int(self.all_summ[0][0]) + int(self.all_summ[0][1])}")
+        except:
+            ...
 
         info = self.helper.get_list(f"""SELECT * FROM CloseOrderView GROUP BY id_table ORDER BY id;""")
         self.all_days_transactions.setRowCount(len(info))
         for row in range(len(info)):
-            self.all_days_transactions.setCellWidget(row, 0, InfoProductsOrder(row = row, id_table = str(info[row][1])))# id_table
+            self.all_days_transactions.setCellWidget(row, 0, InfoProductsOrder(row = row, id_table = str(info[row][1]), db="Alpha.db"))# id_table
             self.all_days_transactions.setItem(row, 1, CustomQTableWidgetItem(str(info[row][2]))) # name_table
             self.all_days_transactions.setItem(row, 2, CustomQTableWidgetItem(str(info[row][3]))) # client_name
             self.all_days_transactions.setItem(row, 3, CustomQTableWidgetItem(str(info[row][6]))) # cash
@@ -156,6 +168,10 @@ class DayOf_widget(QGridLayout):
         msgBox.setWindowTitle("Close day")
         result = msgBox.exec()
         if result == yes:
+            if self.e_cash == "":
+                self.e_cash = 0
+            if self.e_card == "":
+                self.e_card = 0
             history_of_alpha = self.helper.get_list("""SELECT * FROM ClosedOrder;""")
             for i in history_of_alpha:
                 self.helper_beta.insert(f"""INSERT INTO HistoryTable VALUES(

@@ -119,11 +119,11 @@ class Pay_widget(QWidget):
             self.cash_insert = int(self.cash.text())
 
         cash = self.summ_order - int(self.card_insert)
-
+        
         if ((self.cash_insert + self.card_insert) >= self.summ_order) and (self.card_insert <= self.summ_order):
 
             self.helper.insert(f"""INSERT INTO ClosedOrder (id_table, name_table, client_name, menu_name, count, cash, card, time_open, menu_price)
-                                SELECT OpenOrder.id_table, Client.name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open, Menu.price
+                                SELECT OpenOrder.id_table, Tables.tables_name, Client.name, Menu.name, COUNT(OpenOrder.count), {cash}, {self.card_insert}, Tables.time_open, Menu.price
                                 FROM OpenOrder, Menu, Client, Tables
                                 WHERE OpenOrder.id_menu = Menu.id AND OpenOrder.id_client = Client.id
                                 AND OpenOrder.id_table = Tables.id AND Tables.id_client = Client.id
@@ -136,6 +136,5 @@ class Pay_widget(QWidget):
                                     WHERE TransactionStock.id_table = {self.activeTab.activeTab} AND id_product = {i[0]}) WHERE id = {i[0]}; """)
 
             self.tablesListWidget.del_table(pay = True)
-            self.centralWidget.managment_window.stock_window.drow_stock()
-            self.centralWidget.archive_widget.drow_archive_all()
+            self.centralWidget.drowAllwOrders()
             self.setCentralWidget()

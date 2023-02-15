@@ -19,7 +19,7 @@ class Append_product_button(QPushButton):
         self.file_put = 'coffee.svg'
         self.feather = None
         self.clicked.connect(self.add_product_window)
-        self.category = self.helper.get_tuple("""SELECT name FROM Category""")[0]
+        self.category = self.helper.get_one("""SELECT name FROM Category""")[0]
 
     def add_product_window(self):
         self.form = QWidget()

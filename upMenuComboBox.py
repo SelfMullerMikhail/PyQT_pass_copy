@@ -7,6 +7,15 @@ from widgets.day_off.dayOf_widget import DayOf_widget
 
 class UpMenu_comboBox(QComboBox):
 
+    def __init__(self):
+        super().__init__()
+        self.setFixedHeight(40)
+        self.setIconSize(QSize(30,30))
+        self.textActivated.connect(self.change_active_window)
+        self.all_windows_dickt = {}
+        self.upMenuGrid, self.QVbox, self.main_widget = self.create_main_widget()
+
+
     def addItemTab(self, name, icon):
         self.addItem(name)
         self.setItemIcon(self.count()-1, get_path_icon(icon))
@@ -33,7 +42,8 @@ class UpMenu_comboBox(QComboBox):
         obj = self.active_window.layout()
         if obj.__class__ == DayOf_widget:
             obj.upgrading()
-
+        
+        
 
     def create_tab(self, name, icon, obj):
         self.addItemTab(name, icon)
@@ -45,16 +55,6 @@ class UpMenu_comboBox(QComboBox):
         self.active_window.show()
         return self.main_widget
 
-    def __init__(self):
-        super().__init__()
-        self.setFixedHeight(40)
-        self.setIconSize(QSize(30,30))
-        self.textActivated.connect(self.change_active_window)
-        self.all_windows_dickt = {}
-
-        self.upMenuGrid, self.QVbox, self.main_widget = self.create_main_widget()
-
-        
 
 
 

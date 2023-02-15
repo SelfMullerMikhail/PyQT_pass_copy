@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import  QGridLayout, QLabel
+from PyQt6.QtWidgets import  QGridLayout, QLabel, QPushButton
 
 from widgets.main_window.tableListWidget import TablesListWidget
 from widgets.main_window.menuTabWidget import MenuTabWidget
@@ -9,6 +9,8 @@ from widgets.main_window.addTableButton import AddTableButton
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.control_button import Сontrol_button
 from functions.db_Helper import Db_helper
+from PyQt6.QtCore import QSize
+from func_get_path_icon import get_path_icon
 
 
 from cssStyleSheet.clearButtonStyle import clearButtonStyle
@@ -31,24 +33,34 @@ class Main_widget(QGridLayout):
         self.tablesListWidget = TablesListWidget(self, activeTab = activeTab)
         self.menuTabWidget = MenuTabWidget(activeTab = activeTab, ordersListWidget = self)
         self.payButton = PayButton(text="Payment", centralWidget = self.centralWidget, activeTab = activeTab, tablesListWidget = self.tablesListWidget)
-        self.clearButton = ClearButton(activeTab = activeTab, ordersListWidget = self.ordersListWidget, selfWidget = self) 
+        self.clearButton = ClearButton(activeTab = activeTab, selfWidget = self.centralWidget) 
         self.delTableButton = DelTableButton(self.tablesListWidget)
         self.addTableButton = AddTableButton(self.tablesListWidget)
         self.summ_lable = QLabel()
+        self.change_authorization = QPushButton("Out")
+        self.change_authorization.setFixedWidth(130)
+        self.change_authorization.setIcon(get_path_icon("log-out.svg"))
+        self.change_authorization.setIconSize(QSize(30, 30))
+        self.change_authorization.clicked.connect(self.change_authorization_func)
 
         self.clearButton.setStyleSheet(clearButtonStyle)
         self.payButton.setStyleSheet(payButtonStyle)
         self.menuTabWidget.setStyleSheet(MenuTabWidgetStyle)
         
-        self.addWidget(self.tablesListWidget, 1, 0, 18, 2)
+        self.addWidget(self.tablesListWidget, 1, 0, 17, 2)
         self.addWidget(self.ordersListWidget, 1, 2, 13, 8)
         self.addWidget(self.menuTabWidget, 1, 10, 20, 10)                        
         self.addWidget(self.payButton, 15, 2, 1, 3)
         self.addWidget(self.clearButton, 15, 7, 1, 3)
-        self.addWidget(self.delTableButton, 19, 0, 1, 3)
-        self.addWidget(self.addTableButton, 20, 0, 1, 3)
+        self.addWidget(self.delTableButton, 18, 0, 1, 3)
+        self.addWidget(self.addTableButton, 19, 0, 1, 3)
+        self.addWidget(self.change_authorization, 20, 0, 1, 3)
         self.addWidget(self.summ_lable, 14, 9, 1, 1)
+        
         self.drow_orders()
+
+    def change_authorization_func(self):
+        self.centralWidget.setCentralWindow_authorization()
 
     def set_summ_label(self):
         summ_lable = 0
@@ -78,7 +90,6 @@ class Main_widget(QGridLayout):
                                         AND OpenOrder.id_table = {self.activeTab.activeTab}
                                         GROUP BY id_menu;"""))
         
-        # SELECT * FROM OpenOrderViewTable WHERE id_table = {self.activeTab.activeTab} AND id_client = {self.activeTab.activeUser[0]}
         for row in range(len(info)):
             for i in range(4):
                 

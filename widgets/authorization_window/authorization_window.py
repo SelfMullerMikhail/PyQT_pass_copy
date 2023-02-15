@@ -26,6 +26,9 @@ class Authorization_window(QWidget):
         self.loy.addWidget(self.numbers, 1, 6)
         self.loy.addWidget(self.numbers_table, 2, 3, 7, 7)
 
+    def set_authorization_window(self):
+        self.selfWidget.setCentralWindow_authorization()
+
     def numbers_clear_func(self):
         self.numbers.clear()
 

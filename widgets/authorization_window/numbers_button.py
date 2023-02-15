@@ -19,12 +19,12 @@ class Number_button(QPushButton):
         self.selfWidget.numbers.insert(str(self.text_))
         if len(self.selfWidget.numbers.text()) == 4:
             clients_password = hashlib.sha1(self.selfWidget.numbers.text().encode('UTF-8')).hexdigest()
-            password = self.helper.get_list("""SELECT id, name, password 
+            password = self.helper.get_list("""SELECT id, name, password, access 
                                                 FROM Client;""")
             for i in password:
                 if i[2] == clients_password:
                     self.main_wdinow.setCentralWindow()
-                    self.main_wdinow.activeTab.activeUser = (i[0], i[1])
-                    self.main_wdinow.droAllwOrders()
+                    self.main_wdinow.activeTab.activeUser = (i[0], i[1], i[3])
+                    self.main_wdinow.drowAllwOrders()
                 else:
                     self.selfWidget.numbers.clear()

@@ -71,13 +71,8 @@ class Add_stock_button(QPushButton):
 
     def count_new_price(self, fact_count, fact_price, count, price):
         A_koef = fact_count / (fact_count + count)
-        print(A_koef)
         B_koef = count / (fact_count + count )
-        print(B_koef)
         A_price_g = (fact_price * 0.001) * A_koef
-        print(A_price_g)
         B_price_g = (price * 0.001) * B_koef
-        print(B_price_g)
         normal_price = (A_price_g + B_price_g) * 1000
-        print(normal_price)
         self.helper.insert(f"""UPDATE Stock SET price = {normal_price} WHERE id = {self.id_stock};""")
