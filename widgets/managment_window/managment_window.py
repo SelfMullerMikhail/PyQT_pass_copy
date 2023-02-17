@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QVBoxLayout, QGridLayout
+from PyQt6.QtWidgets import QVBoxLayout
 
 from widgets.managment_window.stock_window.stock_window import Stock_window
 from upMenuComboBox import UpMenu_comboBox

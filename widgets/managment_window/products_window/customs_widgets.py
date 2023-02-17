@@ -82,7 +82,7 @@ class CustomButtonDellProduct(QPushButton):
                                                     GROUP BY table_id;""")
             if check_product == []:
                 self.helper.insert(f"""DELETE FROM Menu WHERE id = '{self.menu_id}'""")
-                self.order_window.drow_stock()
+                self.central_window.drowAllwOrders()
             else:
                 text = ""
                 for i in check_product:

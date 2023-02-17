@@ -17,6 +17,7 @@ class TablesListWidget(QListWidget):
         self.setIconSize(QSize(30, 30))
         self.itemClicked.connect(self.one_click)
         self.itemChanged.connect(self.change_name)
+        self.table_name = ''
 
     def getTablesCount(self):
         return self.helper.get_list(f"SELECT COUNT(id) FROM Tables WHERE id_client = {self.activeTab.activeUser[0]}")[0][0]
@@ -67,10 +68,14 @@ class TablesListWidget(QListWidget):
         self.getTabs()
 
     def one_click(self, e):
+        self.table_name = e.text()
         self.activeTab.activeTab = e.indx
         self.ordersListWidget.drow_orders()
         self.ordersListWidget.set_summ_label()
 
     def change_name(self, e):
-        self.helper.insert(f"UPDATE Tables SET tables_name = '{e.text()}' WHERE id = {e.indx}")
+        if len(e.text()) > 1 and len(e.text()) != 0:
+            self.helper.insert(f"UPDATE Tables SET tables_name = '{e.text()}' WHERE id = {e.indx}")
+        else:
+            e.setText(self.table_name)
 

@@ -74,14 +74,15 @@ class Append_product_button(QPushButton):
             if self.file_put == "":
                 self.file_put = 'coffee.svg'
             self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\products_window" ,f"feather\{self.file_put}")
-            self.butt.setIcon(get_path_icon(self.file_put))
+            if self.file!="":
+                shutil.copyfile(self.file, self.feather)
+                self.butt.setIcon(get_path_icon(self.file_put))
             
     def append_func(self):
-        if self.feather!=None:
-            shutil.copyfile(self.file, self.feather)
         text = self.enter_name.text()
         price = self.enter_price.text()
-        if text != "":
+        already_name_menu = self.helper.get_one(f"""SELECT count(id) FROM Menu WHERE name = '{text}';""")[0]
+        if text != "" and already_name_menu == 0:
             if price == "":
                 price = 0
             
@@ -89,7 +90,7 @@ class Append_product_button(QPushButton):
                                     SELECT '{text}', Category.id, {price}, '{self.file_put}'
                                     FROM Category 
                                     WHERE Category.name = '{self.category}' """)
-            max_numb = self.helper.get_tuple("""SELECT MAX(id) FROM Menu """)[0]
+            max_numb = self.helper.get_one("""SELECT MAX(id) FROM Menu """)[0]
             self.helper.insert(f"""INSERT INTO TechnologyCard (id_menu, id_product, count)
                                 SELECT {max_numb}, id, count FROM AddProduct_to_TechnologyCard""")
             self.helper.insert("""DELETE FROM AddProductTransaction""")

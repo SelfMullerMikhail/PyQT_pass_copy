@@ -30,6 +30,7 @@ class Window(QMainWindow):
         self.inf = self.upMenu.activate("Main")
         
         
+        
         self.login_window = Login_window()
 
         self.setCentralWindow_authorization()
@@ -40,6 +41,7 @@ class Window(QMainWindow):
         self.Main_widget.tablesListWidget.clear()
         self.Main_widget.drow_orders()
         self.Main_widget.set_summ_label()
+        self.Main_widget.menuTabWidget.create_full_menu()
 
         self.managment_window.stock_window.drow_stock()
         self.archive_widget.drow_archive_all()

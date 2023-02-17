@@ -7,9 +7,10 @@ from functions.db_Helper import Db_helper
 from func_get_path_icon import get_path_icon
 
 class CategoryEditButton(QPushButton):
-    def __init__(self, id_category, selfWidget):
+    def __init__(self, id_category, selfWidget, central_window):
         super().__init__()
         self.helper = Db_helper("Alpha.db")
+        self.central_window = central_window
         self.id_category = id_category
         self.category_widget = selfWidget
         self.setText("edit")
@@ -56,7 +57,7 @@ class CategoryEditButton(QPushButton):
         if self.file_put == "":
             self.file_put = 'book.svg'
         self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\category_window" ,f"feather\{self.file_put}")
-        if self.feather!=None:
+        if self.file!="":
             shutil.copyfile(self.file, self.feather)
         self.enter_picture.setIcon(get_path_icon(self.file_put))
         
@@ -67,5 +68,6 @@ class CategoryEditButton(QPushButton):
             self.helper.insert(f"""UPDATE Category SET name = '{text}' WHERE id = {self.id_category};""")
             self.helper.insert(f"""UPDATE Category SET image ='{self.file_put}' WHERE id = {self.id_category};""")
             self.category_widget.drow_func()
+            self.central_window.drowAllwOrders()
             self.form.close()
         
