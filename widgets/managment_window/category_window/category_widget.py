@@ -47,7 +47,7 @@ class Category_widget(QGridLayout):
             icon.setIcon(get_path_icon(info[row][2]))
             self.products_list.setItem(row, 0, icon)
             self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1])))
-            self.products_list.setCellWidget(row, 2, CategoryEditButton(id_category = info[row][0], selfWidget = self))
+            self.products_list.setCellWidget(row, 2, CategoryEditButton(id_category = info[row][0], selfWidget = self, central_window = self.central_window))
             self.products_list.setCellWidget(row, 3, Dell_category_button(text = "del", name = info[row][1], wind = self, id_category = info[row][0]))
 
     def add_product_window(self):
@@ -83,14 +83,14 @@ class Category_widget(QGridLayout):
         if self.file_put == "":
             self.file_put = 'book.svg'
         self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\category_window" ,f"feather\{self.file_put}")
-        self.enter_picture.setIcon(get_path_icon(self.file_put))
+        if self.file!="":
+                shutil.copyfile(self.file, self.feather)
+                self.enter_picture.setIcon(get_path_icon(self.file_put))
 
     def append_func(self):
         name = self.enter_name.text()
-        if name != "":
-            if self.feather!=None:
-                shutil.copyfile(self.file, self.feather)
-
+        already_name_menu = self.helper.get_one(f"""SELECT count(id) FROM Menu WHERE name = '{name}';""")[0]
+        if name != "" and already_name_menu == 0:
             self.helper.insert(f"""INSERT INTO Category(name, image) 
                                     VALUES ('{name}', '{self.file_put}')""")
             
@@ -99,3 +99,4 @@ class Category_widget(QGridLayout):
             self.central_window.Main_widget.menuTabWidget.clear()
             self.central_window.Main_widget.menuTabWidget.create_full_menu()
             self.file_put = 'book.svg'
+            self.form.close()

@@ -7,6 +7,7 @@ from widgets.managment_window.products_window.dell_product_button import Dell_pr
 from widgets.managment_window.stock_window.add_stock_button import Add_stock_button
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.sorting_widgets import QComboBoxSorting, QLineEditSorting
+from widgets.managment_window.stock_window.edit_stock_button import Edit_stock_button
 
 from functions.db_Helper import Db_helper
 
@@ -18,9 +19,9 @@ class Stock_window(QGridLayout):
         self.helper = Db_helper("Alpha.db")
         self.central_window = central_window
         self.products_list = OrdersListWidget(active_window = active_window)
-        self.products_list.setColumnCount(6) 
-        self.products_list.add_columns(((0, "Name"), (1, "Count"), (2, "Price"), (3, "Total money"), (4, ""), (5, "")))
-        self.products_list.settingSizeColumn((70, 70, 70, 70, 40, 40))
+        self.products_list.setColumnCount(8) 
+        self.products_list.add_columns(((0, "Name"), (1, "Count"), (2, "Price"), (3, "Total money"), (4, "Supplier "), (5, ""), (6, ""), (7, "")))
+        self.products_list.settingSizeColumn((70, 70, 70, 70, 40, 40, 40, 40))
         self.products_list.settingSizeRow(50)
         self.products_list.setLineCount("Stock")
         self.quick_search = QLineEditSorting(selfWidget=self)
@@ -77,7 +78,7 @@ class Stock_window(QGridLayout):
         name = self.enter_name.text()
         diller = self.choose_diller.diller
         if name != "" and diller != "":
-            id_diller = self.helper.get_tuple(f"""SELECT id FROM Suppliers WHERE name = '{diller}' """)[0]
+            id_diller = self.helper.get_one(f"""SELECT id FROM Suppliers WHERE name = '{diller}' """)[0]
             self.helper.insert(f"""INSERT INTO Stock(name, count, price, id_Suppiler) 
                                     VALUES ('{name}', 0, 0, {id_diller}) """)
             self.products_list.setLineCount("Stock")
@@ -86,8 +87,8 @@ class Stock_window(QGridLayout):
 
     def drow_stock(self):
         self.products_list.clearContents()
-        info = self.helper.get_list((f"""SELECT Name, Count, Price, (Count*0.001*Price) as 'Total money', id_Suppiler, id 
-                                                    FROM Stock
+        info = self.helper.get_list((f"""SELECT Name, Count, Price, Total_money, id_Suppiler, id, supplier_name 
+                                                    FROM StockView
                                                     WHERE {self.sorting.category_search} LIKE '%{self.quick_search.quick_search_line}%'
                                                     ORDER BY {self.sorting.category_search};"""))
         for row in range(len(info)):
@@ -95,5 +96,8 @@ class Stock_window(QGridLayout):
             self.products_list.setItem(row, 1, CustomQTableWidgetItem(str(info[row][1]))) # count
             self.products_list.setItem(row, 2, CustomQTableWidgetItem(str(round(info[row][2], 2)))) # price
             self.products_list.setItem(row, 3, CustomQTableWidgetItem(str(info[row][3]))) # total money
-            self.products_list.setCellWidget(row, 4, Add_stock_button(text="add count", id_suppiler=info[row][4], id_stock=info[row][5], orderList = self)) # add count
-            self.products_list.setCellWidget(row, 5, Dell_product_button("del", name = info[row][0], order_window = self))  # del
+            self.products_list.setItem(row, 4, CustomQTableWidgetItem(str(info[row][6]))) # supplier name
+            self.products_list.setCellWidget(row, 5, Edit_stock_button(text="Edit", id_stock=info[row][5], central_window=self.central_window)) # edit_button
+            self.products_list.setCellWidget(row, 6, Add_stock_button(text="add count", id_suppiler=info[row][4], id_stock=info[row][5], orderList = self)) # add count
+            self.products_list.setCellWidget(row, 7, Dell_product_button("del", name = info[row][0], order_window = self))  # del
+

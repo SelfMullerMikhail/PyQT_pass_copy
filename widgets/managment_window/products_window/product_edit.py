@@ -82,7 +82,7 @@ class Product_edit(QPushButton):
             if self.file_put == "":
                 self.file_put = self.file_put_b
             self.feather = str(os.path.dirname( __file__ )).replace("widgets\managment_window\products_window" ,f"feather\{self.file_put}")
-            if self.feather!=None:
+            if self.file!="":
                 shutil.copyfile(self.file, self.feather)
             self.butt.setIcon(get_path_icon(self.file_put))
 

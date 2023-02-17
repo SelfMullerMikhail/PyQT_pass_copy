@@ -51,6 +51,7 @@ class MenuTabWidget(QTabWidget):
         self.addTab(self.tab , get_path_icon(icon), name)
 
     def create_full_menu(self):
+        self.clear()
         self.category = self.helper.get_list("SELECT id, name, image FROM Category")
         for i in self.category:
             self.new_menu = self.helper.get_list(f"SELECT id, name, image FROM Menu WHERE category = {i[0]}")

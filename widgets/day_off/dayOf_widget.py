@@ -178,9 +178,12 @@ class DayOf_widget(QGridLayout):
                             {i[0]}, {i[1]}, '{i[2]}', '{i[3]}', '{i[4]}', {i[5]}, {i[6]}, {i[7]}, '{i[8]}', '{i[9]}', {i[10]});""")
             self.helper_beta.insert(f"""INSERT INTO MoneyStory(cash_teory,cash_fact, card_teory, card_fact) 
                                     VALUES({self.all_summ[0][0]}, {self.e_cash}, {self.all_summ[0][1]}, {self.e_card});""") 
-            self.helper.get_list(f"""DELETE FROM ClosedOrder;""")
+            self.helper.insert(f"""DELETE FROM ClosedOrder;""")
+            self.fact_cash.clear()
+            self.fact_card.clear()
             self.mainWidget.setCentralWindow_authorization()
-
+            self.mainWidget.drowAllwOrders()
+            self.mainWidget.upMenu.change_active_window("Main")
 
 
     
