@@ -11,7 +11,8 @@ from functions.db_Helper import Db_helper
 
 
 class PayButton(QPushButton):
-    def __init__(self, text, centralWidget, activeTab, tablesListWidget):
+    def __init__(self, text, centralWidget, activeTab, tablesListWidget) -> None:
+        """This Button open new window(QWidget) for creating pay"""
         super().__init__(text=text)
         self.helper = Db_helper("Alpha.db")
         self.tablesListWidget = tablesListWidget
@@ -23,7 +24,11 @@ class PayButton(QPushButton):
         self.clicked.connect(self.anyFunction)
         
 
-    def anyFunction(self, e):
+    def anyFunction(self, e: bool) -> None:
+        """Overload for clicked this Button. 
+            1. SELECT strftime("%Y-%m-%d", datetime('now', '-1 day')).
+            2. SELECT id FROM OpenOrder WHERE id_table = {self.activeTab.activeTab}.
+            3. SELECT * FROM ClosedOrder WHERE time_close LIKE '%{date}%' """
         date = self.helper.get_list("""SELECT strftime("%Y-%m-%d", datetime('now', '-1 day'))""")[0][0]
         self.proof = self.helper.get_list(f"""SELECT id FROM OpenOrder WHERE id_table = {self.activeTab.activeTab}""")
         self.closed_day = self.helper.get_list(f"""SELECT * FROM ClosedOrder WHERE time_close LIKE '%{date}%';""")

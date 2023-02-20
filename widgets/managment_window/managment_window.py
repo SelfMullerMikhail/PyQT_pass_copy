@@ -13,7 +13,7 @@ from widgets.managment_window.statistic_window.statistic_widget import Statistic
 class Managment_widget(QVBoxLayout):
     def __init__(self, active_window, central_window):
         super().__init__()
-        self.upMenu = UpMenu_comboBox()
+        self.upMenu: UpMenu_comboBox = UpMenu_comboBox()
         self.addWidget(self.upMenu)
         self.upMenu.create_tab("Products", "coffee.svg", Products_window(active_window = active_window, central_window = central_window)) 
         self.stock_window = Stock_window(active_window = active_window, central_window = central_window)

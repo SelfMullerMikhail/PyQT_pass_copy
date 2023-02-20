@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QPushButton, QGridLayout, QLineEdit, QLabel, QWidget, QMessageBox
+from PyQt6.QtWidgets import QPushButton, QGridLayout, QLineEdit, QLabel, QWidget, QMessageBox, QMainWindow
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression
 
@@ -9,31 +9,31 @@ from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from functions.db_Helper import Db_helper
 
 class DayOf_widget(QGridLayout):
-    def __init__(self, mainWidget):
+    def __init__(self, mainWidget: QMainWindow) -> None:
         super().__init__()
-        self.mainWidget = mainWidget
-        self.helper = Db_helper("Alpha.db")
-        self.helper_beta = Db_helper("Beta.db")
+        self.mainWidget: QMainWindow = mainWidget
+        self.helper: Db_helper = Db_helper("Alpha.db")
+        self.helper_beta: Db_helper = Db_helper("Beta.db")
         self.money = 0
 
-        self.list_ = {1: "Cash", 2: "Card"}
-        self.i = 1
-        self.e_card = 0
-        self.e_cash = 0
-        self.changer = next(self.changer_genetarion())
+        self.list_: dict = {1: "Cash", 2: "Card"}
+        self.i: int = 1
+        self.e_card: int = 0
+        self.e_cash: int = 0
+        self.changer: str = next(self.changer_genetarion())
         
-        self.fact_cash = QLineEdit()
+        self.fact_cash: QLineEdit = QLineEdit()
         self.fact_cash.textChanged.connect(self.fact_cash_func)
-        self.fact_card = QLineEdit()
+        self.fact_card: QLineEdit = QLineEdit()
         self.fact_card.textChanged.connect(self.fact_card_func)
 
-        self.teory_cash = QLabel()
-        self.teory_card =QLabel()
-        self.teory_summ = QLabel()
+        self.teory_cash: QLabel = QLabel()
+        self.teory_card: QLabel =QLabel()
+        self.teory_summ: QLabel = QLabel()
 
-        self.difference_cash = QLabel()
-        self.difference_card = QLabel()
-        self.difference_sum = QLabel('333')
+        self.difference_cash: QLabel = QLabel()
+        self.difference_card: QLabel = QLabel()
+        self.difference_sum: QLabel = QLabel('333')
 
         for i in (self.fact_cash, self.fact_card):
             i.setValidator(QRegularExpressionValidator(QRegularExpression("[0-9]{0,7}")))
@@ -44,21 +44,21 @@ class DayOf_widget(QGridLayout):
 
  
 
-        self.numbers_table = Numbers_table(selfWidget=self, tipe_of_button=DayOf_buttons)
+        self.numbers_table: Numbers_table = Numbers_table(selfWidget=self, tipe_of_button=DayOf_buttons)
 
         self.numbers_table.clear.setText("Clear")
         self.numbers_table.clear.clicked.connect(self.numbers_clear_func)
         self.numbers_table.close_button.clicked.connect(self.numbers_change_func)
         self.numbers_change_func()
 
-        self.transaction_button = QPushButton("DAY OFF")
+        self.transaction_button: QPushButton = QPushButton("DAY OFF")
         self.transaction_button.setMinimumHeight(50)
         self.transaction_button.clicked.connect(self.transaction_func)
 
         self.functions = {"Cash": self.fact_cash, 
                         "Card": self.fact_card}
         
-        self.all_days_transactions = OrdersListWidget(active_window = ...)
+        self.all_days_transactions: OrdersListWidget = OrdersListWidget(active_window = ...)
         self.all_days_transactions.setColumnCount(9) 
         self.all_days_transactions.add_columns(((0, "id_table"), (1, "name_table"), (2, "client_name"), (3, "cash"), (4, "card"), (5, "total"), (6, "time open"), (7, "time close"), (8, "") ))
         self.all_days_transactions.settingSizeColumn((50, 70, 80, 45, 45, 45, 85, 85, 50))
@@ -67,7 +67,7 @@ class DayOf_widget(QGridLayout):
         self.fact_cash_func(0)
         self.fact_card_func(0)
 
-        widgets_list = ((QWidget(), 0, 0, 22, 10),
+        self.widgets_list: tuple = ((QWidget(), 0, 0, 22, 10),
                         (self.fact_cash, 0, 0, 1, 1),
                         (self.teory_cash, 0, 1, 1, 1),
                         (self.difference_cash, 0, 2, 1, 1), 
@@ -83,12 +83,13 @@ class DayOf_widget(QGridLayout):
                         (self.transaction_button, 18, 2, 2, 5),
                          (self.all_days_transactions, 4, 0, 12, 7))
         
-        for i in widgets_list:
+        for i in self.widgets_list:
             self.addWidget(i[0], i[1], i[2], i[3], i[4])
-        self.e_cash = 0
-        self.e_card = 0
+        self.e_cash: int = 0
+        self.e_card: int = 0
 
-    def fact_cash_func(self, e):
+    def fact_cash_func(self, e: int) -> None:
+        "Calculate and validate of total cash summ"
         if e == "":
             e = 0
         self.e_cash = int(e)
@@ -99,7 +100,8 @@ class DayOf_widget(QGridLayout):
         self.difference_cash.setText(str(self.money))
         self.set_difference_summ()
 
-    def fact_card_func(self, e):
+    def fact_card_func(self, e: int):
+        "Calculate and validate of total cards summ"
         try:
             if e == "":
                 e = 0
@@ -110,28 +112,33 @@ class DayOf_widget(QGridLayout):
         except:
             ...
 
-    def set_difference_summ(self):
+    def set_difference_summ(self) -> None:
+        """Calculate summ"""
         try:
             difference = (self.e_cash + self.e_card) - int(self.all_summ[0][0]+int(self.all_summ[0][1]))
             self.difference_sum.setText(str(difference))
         except:
             ...
-    def changer_genetarion(self):
+    def changer_genetarion(self) -> None:
+        """Change active button for insert"""
         while True:
             self.i += 1
             if self.i == 3:
                 self.i = 1
             yield self.list_[self.i]
 
-    def numbers_clear_func(self):
+    def numbers_clear_func(self) -> None:
+        """Clear all labels sum"""
         self.fact_cash.clear()
         self.fact_card.clear()
 
-    def numbers_change_func(self):
+    def numbers_change_func(self) -> None:
+        """Change number function """
         self.changer = next(self.changer_genetarion())
         self.numbers_table.close_button.setText(self.changer)
 
-    def drow_history(self):
+    def drow_history(self) -> None:
+        """Drow in ordersView all todays orders"""
         self.all_days_transactions.clearContents()
         self.all_summ = self.helper.get_list(f"""SELECT sum(cash), sum(card) FROM CloseOrderView;""")
         self.teory_cash.setText(f"Cash: {self.all_summ[0][0]}")
@@ -153,20 +160,29 @@ class DayOf_widget(QGridLayout):
             self.all_days_transactions.setItem(row, 6, CustomQTableWidgetItem(str(info[row][8]))) # time_open
             self.all_days_transactions.setItem(row, 7, CustomQTableWidgetItem(str(info[row][9]))) # time_close
 
-    def upgrading(self):
+    def upgrading(self) -> None:
+        """Upgrade history, fact_cash, fact_card"""
         self.drow_history()
         self.fact_cash_func(0)
         self.fact_card_func(0)  
 
-    def transaction_func(self):
-        msgBox = QMessageBox()
+    def transaction_func(self) -> None:
+        """Pay transaction function. 
+        \n1. INSERT INTO HistoryTable.
+        \n2. INSERT INTO MoneyStory(cash_teory,cash_fact, card_teory, card_fact).
+        \n3. DELETE FROM ClosedOrder.
+        \nfuntions:
+        \n1. setCentralWindow_authorization.
+        \n2. drowAllwOrders.
+        \n3. change_active_window"""
+        msgBox: QMessageBox = QMessageBox()
         msgBox.setText(f"Are you sure?")
-        yes = QMessageBox.StandardButton.Ok
+        yes: QMessageBox = QMessageBox.StandardButton.Ok
         msgBox.setStandardButtons(yes | QMessageBox.StandardButton.Cancel)
         msgBox.setDefaultButton(QMessageBox.StandardButton.Cancel)
         msgBox.setIcon(QMessageBox.Icon.Question)
         msgBox.setWindowTitle("Close day")
-        result = msgBox.exec()
+        result: QMessageBox = msgBox.exec()
         if result == yes:
             if self.e_cash == "":
                 self.e_cash = 0
@@ -189,7 +205,8 @@ class DayOf_widget(QGridLayout):
     
 
 class DayOf_buttons(QPushButton):
-    def __init__(self, text, selfWidget=..., main_wdinow =...):
+    def __init__(self, text, selfWidget=..., main_wdinow =...) -> None:
+        """Button for calculate frame """
         super().__init__()
         self.text_ = text
         self.selfWidget = selfWidget

@@ -1,4 +1,5 @@
-from PyQt6.QtWidgets import  QGridLayout, QLabel, QPushButton
+from PyQt6.QtWidgets import  QGridLayout, QLabel, QPushButton, QMainWindow
+from PyQt6.QtCore import QSize
 
 from widgets.main_window.tableListWidget import TablesListWidget
 from widgets.main_window.menuTabWidget import MenuTabWidget
@@ -9,7 +10,7 @@ from widgets.main_window.addTableButton import AddTableButton
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.control_button import Сontrol_button
 from functions.db_Helper import Db_helper
-from PyQt6.QtCore import QSize
+from functions.active_tub import ActiveTable
 from func_get_path_icon import get_path_icon
 
 
@@ -19,7 +20,8 @@ from cssStyleSheet.menuTabWidgetStyle import MenuTabWidgetStyle
 from widgets.ordersListWidget import OrdersListWidget
 
 class Main_widget(QGridLayout):
-    def __init__(self, activeTab, centralWidget):
+    """QGridLayout of first page of window """
+    def __init__(self, activeTab: ActiveTable, centralWidget: QMainWindow) -> None:
         super().__init__()
         self.helper = Db_helper("Alpha.db")
         self.centralWidget = centralWidget
@@ -59,10 +61,12 @@ class Main_widget(QGridLayout):
         
         self.drow_orders()
 
-    def change_authorization_func(self):
+    def change_authorization_func(self) -> None:
+        """Doing set of first page in this window """
         self.centralWidget.setCentralWindow_authorization()
 
-    def set_summ_label(self):
+    def set_summ_label(self) -> None:
+        """Doing count of summ for all products in choosed table  """
         summ_lable = 0
         summ = self.helper.get_list(f"""SELECT sum(Menu.price * OpenOrder.count)
                                     FROM  OpenOrder, Menu
@@ -75,7 +79,8 @@ class Main_widget(QGridLayout):
         
         self.summ_lable.setText(f"sum: {summ_lable}")
 
-    def drow_orders(self):
+    def drow_orders(self) -> None:
+        """Drow all window of choosed table with buttons """
         self.ordersListWidget.clearContents()
         info = self.helper.get_list((f"""SELECT Menu.name as menu_name, 
                                         Menu.price as menu_prise, 
