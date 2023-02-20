@@ -1,4 +1,10 @@
 # PyQT_pass_copy
+Проект можно запустить скачав готовое решение. в архиве UseEasyV...
+На данный момент поддерживается только на ОС Windows10+
+
+The project can be launched by downloading a ready-made solution. in the UseEasyV... archive...
+Currently only supported on Windows 10+
+--------------------------------------------------------------------------------------------------------------
 Сразу обозначу, что я признаю некую не структурированность кода, ошибки, нарушение PEP8,
 в некоторых местах  смешение паттернов проектирования, но весь код от начала и до конца
 я продумывал и писал сам. Вынес из него много уроков и в следующий раз не допущу данных ошибок. 
@@ -9,6 +15,7 @@ in some places a mixture of design patterns, but I thought over and wrote all th
 to end and wrote it myself. I learned a lot from it and next time I will not make these mistakes. 
 In time, I will put it in order, but at this time there is no time for this.
 
+--------------------------------------------------------------------------------------------------------------
 А теперь немного о проекте / And now a little about the project:
 
 Данный проект является десктопным приложением для малого предприятия общественного питания, такого как кофешоп. 
@@ -28,3 +35,5 @@ an individual password of 4 digits.
 There is a shift control, which ends at 00.00.
 This project has various management tabs for the most convenient menu adaptation, and the project also has
 an incredibly huge potential for its development.
+
+
