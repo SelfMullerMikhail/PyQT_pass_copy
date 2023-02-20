@@ -2,13 +2,15 @@ from PyQt6.QtWidgets import QTabWidget, QWidget, QPushButton, QGridLayout
 from PyQt6.QtCore import QSize
 
 from widgets.main_window.customScrollArea import CustomScrollArea
+from widgets.ordersListWidget import OrdersListWidget
 from functions.db_Helper import Db_helper
-
+from functions.active_tub import ActiveTable
 from func_get_path_icon import get_path_icon
 
 
 class MenuTabWidget(QTabWidget):
-    def __init__(self, activeTab, ordersListWidget):
+    def __init__(self, activeTab: ActiveTable, ordersListWidget: OrdersListWidget) -> None:
+        """Widget of products button and page of products"""
         super().__init__()
         self.helper = Db_helper("Alpha.db")
         self.activeTab = activeTab
@@ -17,7 +19,8 @@ class MenuTabWidget(QTabWidget):
         self.setMovable(True)
         self.create_full_menu()
 
-    def create_button(self, foodCategory):
+    def create_button(self, foodCategory: list) -> None:
+        """Count row and column + addWidget"""
         counter_x = -1
         counter_y = 0
         for i in foodCategory:
@@ -32,16 +35,19 @@ class MenuTabWidget(QTabWidget):
                 counter_y += 1
         
 
-    def buttonFunctionComplex(self, i):
+    def buttonFunctionComplex(self, i: int) -> None:
+        """Insert into OpenOrder(id_client, id_table, id_menu, count=1)"""
         self.helper.insert(f"""INSERT INTO OpenOrder(id_client, id_table, id_menu, count)
                                 VALUES({self.activeTab.activeUser[0]}, {self.activeTab.activeTab} ,{i}, 1)""")
         self.ordersListWidget.drow_orders()
 
         
-    def buttonFunction(self, i):
+    def buttonFunction(self, i: int) -> object:
+        """Generation universal function for every button in menuTab"""
         return lambda: self.buttonFunctionComplex(i) 
 
-    def createTab(self, icon, name, foodCategory):
+    def createTab(self, icon: str, name: str, foodCategory: list) -> None:
+        """Create QWidget, CustomScrollArea, QGridLayout and do functions: addWidget, setWidget, create_button, addTab"""
         self.wgt = QWidget() 
         self.tab = CustomScrollArea()
         self.loy = QGridLayout(self.wgt)
@@ -50,7 +56,8 @@ class MenuTabWidget(QTabWidget):
         self.create_button(foodCategory)
         self.addTab(self.tab , get_path_icon(icon), name)
 
-    def create_full_menu(self):
+    def create_full_menu(self) -> None:
+        """Upgrade all products menu(buttons and page)"""
         self.clear()
         self.category = self.helper.get_list("SELECT id, name, image FROM Category")
         for i in self.category:
