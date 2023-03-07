@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QWidget, QGridLayout
 from func_get_path_icon import get_path_icon
 from widgets.day_off.dayOf_widget import DayOf_widget
 
+
 class UpMenu_comboBox(QComboBox):
 
     def __init__(self) -> None:
@@ -56,8 +57,3 @@ class UpMenu_comboBox(QComboBox):
         self.active_window = self.all_windows_dickt[name]
         self.active_window.show()
         return self.main_widget
-
-
-
-
-    

@@ -8,8 +8,8 @@ from widgets.managment_window.stock_window.add_stock_button import Add_stock_but
 from widgets.custom_QTableWidgetItem import CustomQTableWidgetItem
 from widgets.sorting_widgets import QComboBoxSorting, QLineEditSorting
 from widgets.managment_window.stock_window.edit_stock_button import Edit_stock_button
-
 from functions.db_Helper import Db_helper
+
 
 
 
