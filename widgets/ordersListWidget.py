@@ -21,7 +21,7 @@ class OrdersListWidget(QTableWidget):
         self.basikSetting()
 
     def setLineCount(self, table: str) -> None:
-            """Insert next id (cointer) for table in DB """
+            """Insert next id (counter) for table in DB """
             count = int(self.helper.get_list(f"""SELECT COUNT(id) FROM {table};""")[0][0])
             if table == "AddProductTransaction":
                 addProductTransactionCount = int(self.helper.get_list("""SELECT COUNT(id) FROM AddProductTransaction;""")[0][0])

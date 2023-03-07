@@ -16,7 +16,7 @@ class Append_Edit_widget(QWidget):
 
         self.enter_name = QLineEdit()
         self.enter_name.setPlaceholderText('Name')
-        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w]{30}")))
+        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w\s]{1,20}")))
         self.enter_number = QLineEdit()
         self.enter_number.setPlaceholderText("Phone Number (90XXXXXXXXXX)")
         self.enter_number.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{11}")))
