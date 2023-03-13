@@ -1,0 +1,1 @@
+pyuic5.exe -x D:\Study\PyQT_pass\example.ui -o D:\Study\PyQT_pass\example.py

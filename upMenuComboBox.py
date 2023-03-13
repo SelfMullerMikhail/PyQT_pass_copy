@@ -1,6 +1,7 @@
-from PyQt6.QtWidgets import QComboBox, QVBoxLayout, QLayout
-from PyQt6.QtCore import QSize
+from PyQt6.QtWidgets import QComboBox, QVBoxLayout, QLayout, QSizePolicy
+from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtWidgets import QWidget, QGridLayout
+from PyQt6.QtGui import QFont
 
 from func_get_path_icon import get_path_icon
 from widgets.day_off.dayOf_widget import DayOf_widget
@@ -11,11 +12,10 @@ class UpMenu_comboBox(QComboBox):
     def __init__(self) -> None:
         super().__init__()
         """Important class for creating new windows """
-        self.setFixedHeight(40)
-        self.setIconSize(QSize(30,30))
         self.textActivated.connect(self.__change_active_window)
         self.all_windows_dickt: dict = {}
         self.upMenuGrid, self.QVbox, self.main_widget = self.__create_main_widget()
+        self.setFont(QFont("Georgia", 20))
 
     def __addItemTab(self, name: str, icon: str) -> None:
         self.addItem(name)

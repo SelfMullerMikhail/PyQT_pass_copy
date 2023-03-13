@@ -52,16 +52,16 @@ class Add_stock_button(QPushButton):
         self.year = dat.year()
 
     def append_func(self, e):
-        price = int(self.enter_price.text())
-        count = int(self.enter_count.text())
+        price = float(self.enter_price.text())
+        count = float(self.enter_count.text())
         self.helper.insert(f"""INSERT INTO SupplyOfProducts(id_stock, id_suppiler, price, count, date_supply)
                              VALUES({self.id_stock}, {self.id_suppiler}, {price}, {count}, date('{self.year}-{self.month}-{self.day}'));""")
         
         self.helper.insert(f"""UPDATE Stock SET count = (count + {count}) WHERE id = {self.id_stock};""")
 
         price_count = self.helper.get_list(f"""SELECT price, count FROM Stock WHERE id = {self.id_stock} """)[0]
-        fact_price = int(price_count[0])
-        fact_count = int(price_count[1])
+        fact_price = float(price_count[0])
+        fact_count = float(price_count[1])
         if fact_price != 0:
             self.count_new_price(fact_count, fact_price, count, price)
         else:

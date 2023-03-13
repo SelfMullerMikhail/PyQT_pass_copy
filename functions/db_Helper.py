@@ -16,6 +16,20 @@ class Db_helper():
         self.cursor.close()
         self.conn.close()
         return self.result
+    
+    def get_one_obj(self, query) -> int:
+        self.conn = sqlite3.connect(self.PATH)
+        self.cursor = self.conn.cursor()
+        self.cursor.execute(query)
+        self.result = self.cursor.fetchone()
+        self.cursor.close()
+        self.conn.close()
+        if self.result != None:
+            return self.result[0]
+        else:
+            return 0
+    
+    
 
     @func_loger
     def get_one(self, query) -> tuple:

@@ -1,7 +1,6 @@
-import os
-
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem
 from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QFont, QIcon
 
 from functions.active_tub import ActiveTable
 from func_get_path_icon import get_path_icon
@@ -14,11 +13,10 @@ class TablesListWidget(QListWidget):
         self.activeTab = activeTab
         self.ordersListWidget = args[0]
         self.getTabs()
-        self.setFixedWidth(130)
-        self.setIconSize(QSize(30, 30))
         self.itemClicked.connect(self.one_click)
         self.itemChanged.connect(self.change_name)
         self.table_name = ''
+        # self.setSizeAdjustPolicy(QListWidget.SizeAdjustPolicy.AdjustToContents)
 
     def getTablesCount(self) -> int:
         """Return max id from Table's DB where id clients == ActiveTable.activeUser"""
@@ -48,6 +46,7 @@ class TablesListWidget(QListWidget):
             id_tab = int(self.getMaxTabIdAll())+1
         self.customItem = QListWidgetItem(self.customListWidgetItem(tab_name, id_tab))
         self.customItem.indx = id_tab
+        self.customItem.setFont(QFont("Ariel", 15))
         self.customItem.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable)
         self.addItem(self.customItem)
 

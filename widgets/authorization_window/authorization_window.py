@@ -1,7 +1,7 @@
 import hashlib
 
 from PyQt6.QtWidgets import QWidget, QGridLayout, QLineEdit
-from PyQt6.QtGui import QRegularExpressionValidator
+from PyQt6.QtGui import QRegularExpressionValidator, QFont
 from PyQt6.QtCore import QRegularExpression
 
 from widgets.numbers_table import Numbers_table
@@ -17,6 +17,7 @@ class Authorization_window(QWidget):
         self.loy: QGridLayout = QGridLayout()
         self.setLayout(self.loy)
         self.numbers: QLineEdit = QLineEdit()
+        self.numbers.setFont(QFont("Arial", 20))
         self.numbers.textChanged.connect(self.change_text)
         self.numbers.setValidator(QRegularExpressionValidator(QRegularExpression("[0-9]{0,4}"))) 
         self.numbers.setPlaceholderText("* * * *")
@@ -41,9 +42,12 @@ class Authorization_window(QWidget):
                                                 FROM Client;""")
             for i in password:
                 if i[2] == clients_password:
-                    self.selfWidget.setCentralWindow()
                     self.selfWidget.activeTab.activeUser = (i[0], i[1], i[3])
+                    self.selfWidget.activeTab.createFirstMinTable(i[0])
                     self.selfWidget.drowAllwOrders()
+                    self.selfWidget.setCentralWindow()
+                    self.numbers.clear()
+                    
                 else:
                     self.numbers.clear()
 

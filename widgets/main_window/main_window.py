@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import  QGridLayout, QLabel, QPushButton, QMainWindow
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QFont
 
 from widgets.main_window.tableListWidget import TablesListWidget
 from widgets.main_window.menuTabWidget import MenuTabWidget
@@ -31,7 +32,6 @@ class Main_widget(QGridLayout):
         self.ordersListWidget.add_columns(((0, "name"), (1, "price"), (2, "count"), (3, "total"), (4, ""), (5, ""), (6, "")))
         self.ordersListWidget.settingSizeColumn(( 110, 110, 70, 100, 55, 55, 55))
         self.ordersListWidget.setRowCount(15)
-
         self.tablesListWidget = TablesListWidget(self, activeTab = activeTab)
         self.menuTabWidget = MenuTabWidget(activeTab = activeTab, ordersListWidget = self)
         self.payButton = PayButton(text="Payment", centralWidget = self.centralWidget, activeTab = activeTab, tablesListWidget = self.tablesListWidget)
@@ -39,10 +39,10 @@ class Main_widget(QGridLayout):
         self.delTableButton = DelTableButton(self.tablesListWidget)
         self.addTableButton = AddTableButton(self.tablesListWidget)
         self.summ_lable = QLabel()
+        self.summ_lable.setFont(QFont("Arial", 15))
         self.change_authorization = QPushButton("Out")
-        self.change_authorization.setFixedWidth(130)
         self.change_authorization.setIcon(get_path_icon("log-out.svg"))
-        self.change_authorization.setIconSize(QSize(30, 30))
+        self.change_authorization.setFont(QFont("Arial", 15))
         self.change_authorization.clicked.connect(self.change_authorization_func)
 
         self.clearButton.setStyleSheet(clearButtonStyle)
@@ -50,15 +50,14 @@ class Main_widget(QGridLayout):
         self.menuTabWidget.setStyleSheet(MenuTabWidgetStyle)
         
         self.addWidget(self.tablesListWidget, 1, 0, 17, 2)
-        self.addWidget(self.ordersListWidget, 1, 2, 13, 8)
+        self.addWidget(self.ordersListWidget, 1, 2, 16, 8)
         self.addWidget(self.menuTabWidget, 1, 10, 20, 10)                        
-        self.addWidget(self.payButton, 15, 2, 1, 3)
-        self.addWidget(self.clearButton, 15, 7, 1, 3)
+        self.addWidget(self.payButton, 18, 2, 1, 3)
+        self.addWidget(self.clearButton, 18, 7, 1, 3)
         self.addWidget(self.delTableButton, 18, 0, 1, 3)
         self.addWidget(self.addTableButton, 19, 0, 1, 3)
         self.addWidget(self.change_authorization, 20, 0, 1, 3)
-        self.addWidget(self.summ_lable, 14, 9, 1, 1)
-        
+        self.addWidget(self.summ_lable, 17, 9, 1, 1)
         self.drow_orders()
 
     def change_authorization_func(self) -> None:
@@ -80,6 +79,8 @@ class Main_widget(QGridLayout):
         self.summ_lable.setText(f"sum: {summ_lable}")
 
     def drow_orders(self) -> None:
+        self.id_client = self.activeTab.activeUser[0]
+
         """Drow all window of choosed table with buttons """
         self.ordersListWidget.clearContents()
         info = self.helper.get_list((f"""SELECT Menu.name as menu_name, 
@@ -91,14 +92,12 @@ class Main_widget(QGridLayout):
                                         OpenOrder.id_client
                                         FROM  OpenOrder, Menu
                                         WHERE OpenOrder.id_menu = Menu.id 
-                                        AND OpenOrder.id_client = {self.activeTab.activeUser[0]}
+                                        AND OpenOrder.id_client = {self.id_client}
                                         AND OpenOrder.id_table = {self.activeTab.activeTab}
                                         GROUP BY id_menu;"""))
-        
+        self.set_summ_label()
         for row in range(len(info)):
             for i in range(4):
-                
-                self.set_summ_label()
                 self.ordersListWidget.setItem(row, i, CustomQTableWidgetItem(str(info[row][i])))
             self.ordersListWidget.setCellWidget(row, 4, Сontrol_button(name = "+", orderList = self, activeTab = self.activeTab, menu_id = info[row][4]))
             self.ordersListWidget.setCellWidget(row, 5, Сontrol_button(name = "-", orderList = self, activeTab = self.activeTab, menu_id = info[row][4]))

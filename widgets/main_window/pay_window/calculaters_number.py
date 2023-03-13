@@ -10,5 +10,5 @@ class Calculaters_number(QPushButton):
         self.clicked.connect(self.func)
 
     def func(self):
-        self.active_line.active_line.insert(self.numb)
+        self.active_line.getActiveLine().insert(self.numb)
 
