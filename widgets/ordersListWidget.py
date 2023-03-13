@@ -17,6 +17,7 @@ class OrdersListWidget(QTableWidget):
         self.activeTab = active_window
         self.functions = {}
         self.central_window = central_window
+        self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setIconSize(QSize(50, 50))
         self.basikSetting()
 
@@ -59,8 +60,7 @@ class OrdersListWidget(QTableWidget):
 
     def resizeEvent(self, event: QResizeEvent):
         """Method overload for interactive resizing"""
-        self.coef = event.size().width()
-        self.coef = self.coef / self.const
+        self.coef = event.size().width() / self.const
         self.settingSizeColumnActive(self.sizing, self.coef)
     
 

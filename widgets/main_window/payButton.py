@@ -2,6 +2,7 @@ import os, sys
 
 from PyQt6.QtWidgets import QPushButton, QMessageBox
 from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QFont
 
 sys.path.append( os.path.dirname( __file__ ).replace("main_window", ""))
 
@@ -18,9 +19,9 @@ class PayButton(QPushButton):
         self.tablesListWidget = tablesListWidget
         self.centralWidget = centralWidget
         self.activeTab = activeTab
-        self.setFixedHeight(40)
+        self.pay_widget = Pay_widget(self.activeTab, centralWidget = self.centralWidget, tablesListWidget = self.tablesListWidget)
+        self.setFont(QFont("Arial", 15))
         self.setIcon(get_path_icon("credit-card.svg"))
-        self.setIconSize(QSize(25,25))
         self.clicked.connect(self.anyFunction)
         
 
@@ -35,7 +36,6 @@ class PayButton(QPushButton):
         if self.closed_day == []:
             if self.proof != []:
                 self.centralWidget.takeCentralWidget()
-                self.pay_widget = Pay_widget(self.activeTab, centralWidget = self.centralWidget, tablesListWidget = self.tablesListWidget)
                 self.centralWidget.setCentralWidget(self.pay_widget)
         else:
                 msgBox = QMessageBox()

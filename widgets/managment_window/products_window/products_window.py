@@ -57,8 +57,8 @@ class Products_window(QGridLayout):
                 cost_procent = 0
             else:
                 cost = round(cost, 2)
-                if int(info[row][3]) != 0:
-                    cost_procent  = round((int(cost) / int(info[row][3])) * 100, 2)
+                if float(info[row][3]) != 0:
+                    cost_procent  = round((float(cost) / float(info[row][3])) * 100, 2)
                 else:
                     cost_procent = 0 
 

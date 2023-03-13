@@ -77,7 +77,7 @@ class Product_edit(QPushButton):
 
     def choose_photo_func(self):
             wind = QDialog()
-            self.file = QFileDialog.getOpenFileName(wind, "Open file", "C:\\", "Image (*.png)")[0]
+            self.file = QFileDialog.getOpenFileName(wind, "Open file", "C:\\", "Image (*.png, *.svg)")[0]
             self.file_put = self.file.split("/")[-1]
             if self.file_put == "":
                 self.file_put = self.file_put_b

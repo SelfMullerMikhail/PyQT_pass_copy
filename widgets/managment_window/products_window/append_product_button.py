@@ -27,7 +27,7 @@ class Append_product_button(QPushButton):
         self.form_Layout = QGridLayout()
         self.enter_name = QLineEdit()
         self.enter_name.setPlaceholderText('Name')
-        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[a-zA-Z0-9]{0,15}")))
+        self.enter_name.setValidator(QRegularExpressionValidator(QRegularExpression("[\w\s]{1,20}")))
         self.enter_price = QLineEdit()
         self.enter_price.setPlaceholderText("Price")
         self.enter_price.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,8}")))
